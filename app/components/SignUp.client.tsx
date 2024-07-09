@@ -3,11 +3,13 @@ import React, { useState, FormEvent } from "react";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { useNavigate } from "@remix-run/react";
 import { auth } from "~/firebase";
+import Loader from "./Loader.client";
 
 const SignUp: React.FC = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
   const navigate = useNavigate();
 
   const handleSubmit = async (e: FormEvent) => {
@@ -15,12 +17,17 @@ const SignUp: React.FC = () => {
     setError(null);
 
     try {
+      setLoading(true);
       await createUserWithEmailAndPassword(auth, email, password);
       navigate("/dashboard");
     } catch (error) {
       if (error instanceof Error) setError(error.message);
+    } finally {
+      setLoading(false);
     }
   };
+
+  if (loading) return <Loader />;
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
@@ -64,7 +71,7 @@ const SignUp: React.FC = () => {
             type="submit"
             className="w-full px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
           >
-            Sign Up
+            Registrar
           </button>
         </form>
       </div>
