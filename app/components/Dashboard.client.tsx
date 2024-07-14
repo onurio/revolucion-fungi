@@ -4,6 +4,7 @@ import { signOut } from "firebase/auth";
 import { useNavigate, Link } from "@remix-run/react";
 import { useUser } from "~/contexts/UserContext.client";
 import Loader from "./Loader.client";
+import Listings from "./Listings";
 
 const Dashboard: React.FC = () => {
   const navigate = useNavigate();
@@ -31,11 +32,12 @@ const Dashboard: React.FC = () => {
         <h3 className="text-lg font-semibold mb-4">Welcome, {user?.email}</h3>
         <div className="space-y-4">
           <Link
-            to="/nuevo-registro"
+            to="/listing"
             className="block p-4 bg-indigo-600 text-white text-center rounded-md shadow-md"
           >
             Nuevo Registro
           </Link>
+          <Listings />
           {/* Add more menu items here */}
         </div>
       </div>
