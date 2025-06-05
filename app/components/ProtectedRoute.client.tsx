@@ -1,7 +1,7 @@
 // src/components/ProtectedRoute.jsx
 import { useEffect } from "react";
 import { useNavigate } from "@remix-run/react";
-import { auth } from "~/firebase";
+import { auth } from "~/firebase.client";
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const navigate = useNavigate();

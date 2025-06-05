@@ -2,7 +2,7 @@
 import React, { useState, FormEvent } from "react";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { useNavigate } from "@remix-run/react";
-import { auth } from "~/firebase";
+import { auth } from "~/firebase.client";
 import Loader from "./Loader.client";
 
 const SignUp: React.FC = () => {
