@@ -2,10 +2,11 @@ import React, { useState, useEffect } from "react";
 import { Collector, NewCollector } from "~/types";
 import { getAllCollectors, createCollectorFromName } from "~/utils/collectorHelpers";
 import { db } from "~/firebase.client";
-import { collection, doc, setDoc, deleteDoc } from "firebase/firestore";
+import { collection, doc, setDoc, deleteDoc, query, where, getDocs } from "firebase/firestore";
 
 const CollectorManager: React.FC = () => {
   const [collectors, setCollectors] = useState<Collector[]>([]);
+  const [fungiCounts, setFungiCounts] = useState<Map<string, number>>(new Map());
   const [loading, setLoading] = useState(true);
   const [showAddForm, setShowAddForm] = useState(false);
   const [newCollector, setNewCollector] = useState<NewCollector>({
@@ -26,6 +27,16 @@ const CollectorManager: React.FC = () => {
     try {
       const collectorList = await getAllCollectors();
       setCollectors(collectorList);
+      
+      // Fetch fungi counts for each collector
+      const counts = new Map<string, number>();
+      for (const collector of collectorList) {
+        const fungiCollection = collection(db, "fungi");
+        const q = query(fungiCollection, where("collectorIds", "array-contains", collector.id));
+        const querySnapshot = await getDocs(q);
+        counts.set(collector.id, querySnapshot.size);
+      }
+      setFungiCounts(counts);
     } catch (error) {
       console.error("Error fetching collectors:", error);
     } finally {
@@ -204,6 +215,9 @@ const CollectorManager: React.FC = () => {
                 Institución
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Hongos Colectados
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Fecha Creación
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -222,6 +236,11 @@ const CollectorManager: React.FC = () => {
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                   {collector.institution || "-"}
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                    {fungiCounts.get(collector.id) || 0}
+                  </span>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                   {collector.createdAt?.toLocaleDateString() || "-"}

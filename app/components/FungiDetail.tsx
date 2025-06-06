@@ -51,11 +51,43 @@ interface FungiDetailProps {
 }
 
 const FungiDetail: React.FC<FungiDetailProps> = ({ fungi, collector }) => {
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [selectedImageIndex, setSelectedImageIndex] = useState<number>(0);
+  const [modalImageLoading, setModalImageLoading] = useState<boolean>(false);
+
   const formatValue = (value: any): string => {
     if (value === null || value === undefined) return "-";
+    if (typeof value === "number" && isNaN(value)) return "-";
     if (typeof value === "boolean") return value ? "Sí" : "No";
     if (value instanceof Date) return value.toLocaleDateString();
+    if (value === "" || value === "-") return "-";
     return String(value);
+  };
+
+  const openImageModal = (imageUrl: string, index: number) => {
+    setModalImageLoading(true);
+    setSelectedImage(imageUrl);
+    setSelectedImageIndex(index);
+  };
+
+  const closeImageModal = () => {
+    setSelectedImage(null);
+    setModalImageLoading(false);
+  };
+
+  const navigateImage = (direction: 'prev' | 'next') => {
+    if (!fungi.images.length) return;
+    
+    let newIndex = selectedImageIndex;
+    if (direction === 'prev') {
+      newIndex = selectedImageIndex > 0 ? selectedImageIndex - 1 : fungi.images.length - 1;
+    } else {
+      newIndex = selectedImageIndex < fungi.images.length - 1 ? selectedImageIndex + 1 : 0;
+    }
+    
+    setModalImageLoading(true);
+    setSelectedImageIndex(newIndex);
+    setSelectedImage(fungi.images[newIndex]);
   };
 
   return (
@@ -78,7 +110,11 @@ const FungiDetail: React.FC<FungiDetailProps> = ({ fungi, collector }) => {
           <h2 className="text-xl font-semibold text-gray-900 mb-4">Imágenes</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {fungi.images.map((imageUrl, index) => (
-              <div key={index} className="aspect-square overflow-hidden rounded-lg">
+              <div 
+                key={index} 
+                className="aspect-square overflow-hidden rounded-lg cursor-pointer"
+                onClick={() => openImageModal(imageUrl, index)}
+              >
                 <LazyImage
                   src={imageUrl}
                   alt={`${fungi.codigoFungario} - Imagen ${index + 1}`}
@@ -298,6 +334,80 @@ const FungiDetail: React.FC<FungiDetailProps> = ({ fungi, collector }) => {
         <div className="mb-8">
           <h2 className="text-xl font-semibold text-gray-900 mb-4">Notas</h2>
           <p className="text-gray-700 leading-relaxed">{fungi.notas}</p>
+        </div>
+      )}
+
+      {/* Image Modal */}
+      {selectedImage && (
+        <div 
+          className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50"
+          onClick={closeImageModal}
+        >
+          <div className="relative max-w-4xl max-h-full min-w-96 min-h-96 p-4 bg-gray-900 rounded-lg">
+            {/* Close button */}
+            <button
+              onClick={closeImageModal}
+              className="absolute top-4 right-4 text-white hover:text-gray-300 z-10"
+            >
+              <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+
+            {/* Navigation buttons */}
+            {fungi.images.length > 1 && (
+              <>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    navigateImage('prev');
+                  }}
+                  className="absolute left-4 top-1/2 transform -translate-y-1/2 text-white hover:text-gray-300 z-10"
+                >
+                  <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                  </svg>
+                </button>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    navigateImage('next');
+                  }}
+                  className="absolute right-4 top-1/2 transform -translate-y-1/2 text-white hover:text-gray-300 z-10"
+                >
+                  <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                  </button>
+              </>
+            )}
+
+            {/* Loading overlay */}
+            {modalImageLoading && (
+              <div className="absolute inset-4 flex items-center justify-center">
+                <div className="bg-black bg-opacity-50 rounded-lg p-4">
+                  <div className="w-8 h-8 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                </div>
+              </div>
+            )}
+
+            {/* Image */}
+            <img
+              src={selectedImage}
+              alt={`${fungi.codigoFungario} - Imagen ${selectedImageIndex + 1}`}
+              className={`max-w-full max-h-full object-contain transition-opacity duration-300 ${modalImageLoading ? 'opacity-0' : 'opacity-100'}`}
+              onClick={(e) => e.stopPropagation()}
+              onLoad={() => setModalImageLoading(false)}
+              onError={() => setModalImageLoading(false)}
+            />
+
+            {/* Image counter */}
+            {fungi.images.length > 1 && (
+              <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 text-white bg-black bg-opacity-50 px-3 py-1 rounded">
+                {selectedImageIndex + 1} / {fungi.images.length}
+              </div>
+            )}
+          </div>
         </div>
       )}
     </div>
