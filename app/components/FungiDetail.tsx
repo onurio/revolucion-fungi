@@ -134,10 +134,6 @@ const FungiDetail: React.FC<FungiDetailProps> = ({ fungi, collector }) => {
           </h2>
           <div className="space-y-3">
             <div>
-              <span className="font-medium text-gray-700">Código Andrés:</span>
-              <span className="ml-2 text-gray-900">{formatValue(fungi.codigoAndres)}</span>
-            </div>
-            <div>
               <span className="font-medium text-gray-700">Género:</span>
               <span className="ml-2 text-gray-900 italic">{formatValue(fungi.genero)}</span>
             </div>

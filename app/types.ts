@@ -11,7 +11,6 @@ export type NewRegistry = Omit<Registry, "id"> & { id?: string };
 export type Fungi = {
   id: string;
   codigoFungario: string;
-  codigoAndres?: string;
   genero: string;
   especie?: string;
   muestraConservada: boolean;

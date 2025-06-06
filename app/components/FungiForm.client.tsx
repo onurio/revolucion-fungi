@@ -25,7 +25,6 @@ const FungiForm: React.FC<FungiFormProps> = ({ fungi, onSave, onCancel }) => {
 
   const [formData, setFormData] = useState<NewFungi>({
     codigoFungario: "",
-    codigoAndres: "",
     genero: "",
     especie: "",
     muestraConservada: false,
@@ -166,19 +165,6 @@ const FungiForm: React.FC<FungiFormProps> = ({ fungi, onSave, onCancel }) => {
                 value={formData.codigoFungario}
                 onChange={(e) =>
                   handleInputChange("codigoFungario", e.target.value)
-                }
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Código Andrés
-              </label>
-              <input
-                type="text"
-                value={formData.codigoAndres || ""}
-                onChange={(e) =>
-                  handleInputChange("codigoAndres", e.target.value)
                 }
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
               />

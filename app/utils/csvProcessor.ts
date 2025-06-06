@@ -6,7 +6,6 @@ import { collection, query, where, getDocs } from "firebase/firestore";
 
 export interface CSVRow {
   "Código Fungario": string;
-  "Código Andres": string;
   Género: string;
   Especie: string;
   "¿Muestra conservada?": string;
@@ -113,7 +112,6 @@ export async function parseCSVRowWithCollectorMap(
 
     return {
       codigoFungario: row["Código Fungario"],
-      codigoAndres: row["Código Andres"] || undefined,
       genero: row["Género"],
       especie:
         row["Especie"] && row["Especie"] !== "-" ? row["Especie"] : undefined,
@@ -223,7 +221,6 @@ export async function parseCSVRow(
 
     return {
       codigoFungario: row["Código Fungario"],
-      codigoAndres: row["Código Andres"] || undefined,
       genero: row["Género"],
       especie:
         row["Especie"] && row["Especie"] !== "-" ? row["Especie"] : undefined,
