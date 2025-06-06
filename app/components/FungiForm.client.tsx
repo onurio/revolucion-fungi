@@ -1,7 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { Fungi, NewFungi, Collector } from "~/types";
 import { db } from "~/firebase.client";
-import { collection, addDoc, updateDoc, doc, getDocs } from "firebase/firestore";
+import {
+  collection,
+  addDoc,
+  updateDoc,
+  doc,
+  getDocs,
+} from "firebase/firestore";
 import { useNavigate } from "@remix-run/react";
 import ImageUpload from "./ImageUpload";
 
@@ -16,7 +22,7 @@ const FungiForm: React.FC<FungiFormProps> = ({ fungi, onSave, onCancel }) => {
   const [loading, setLoading] = useState(false);
   const [collectors, setCollectors] = useState<Collector[]>([]);
   const [images, setImages] = useState<File[]>([]);
-  
+
   const [formData, setFormData] = useState<NewFungi>({
     codigoFungario: "",
     codigoAndres: "",
@@ -73,7 +79,7 @@ const FungiForm: React.FC<FungiFormProps> = ({ fungi, onSave, onCancel }) => {
       const collectorsCollection = collection(db, "collectors");
       const querySnapshot = await getDocs(collectorsCollection);
       const collectorsData: Collector[] = [];
-      
+
       querySnapshot.forEach((doc) => {
         collectorsData.push({
           id: doc.id,
@@ -82,7 +88,7 @@ const FungiForm: React.FC<FungiFormProps> = ({ fungi, onSave, onCancel }) => {
           updatedAt: doc.data().updatedAt?.toDate() || new Date(),
         } as Collector);
       });
-      
+
       setCollectors(collectorsData);
     } catch (error) {
       console.error("Error fetching collectors:", error);
@@ -90,7 +96,7 @@ const FungiForm: React.FC<FungiFormProps> = ({ fungi, onSave, onCancel }) => {
   };
 
   const handleInputChange = (field: keyof NewFungi, value: any) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
       [field]: value,
     }));
@@ -106,23 +112,24 @@ const FungiForm: React.FC<FungiFormProps> = ({ fungi, onSave, onCancel }) => {
 
     try {
       const fungiCollection = collection(db, "fungi");
-      
-      // TODO: Handle image uploads to Firebase Storage
-      // For now, keep existing images if editing
-      const finalData = {
-        ...formData,
-        images: fungi ? fungi.images : [], // Keep existing images for now
-        updatedAt: new Date(),
-      };
+
+      // Clean up undefined values - Firebase doesn't accept undefined
+      const cleanFormData = Object.fromEntries(
+        Object.entries({
+          ...formData,
+          images: fungi ? fungi.images : [], // Keep existing images for now
+          updatedAt: new Date(),
+        }).filter(([key, value]) => value !== undefined)
+      );
 
       if (fungi?.id) {
         // Update existing fungi
         const fungiDoc = doc(db, "fungi", fungi.id);
-        await updateDoc(fungiDoc, finalData);
+        await updateDoc(fungiDoc, cleanFormData);
       } else {
         // Create new fungi
         await addDoc(fungiCollection, {
-          ...finalData,
+          ...cleanFormData,
           createdAt: new Date(),
         });
       }
@@ -145,7 +152,9 @@ const FungiForm: React.FC<FungiFormProps> = ({ fungi, onSave, onCancel }) => {
       <form onSubmit={handleSubmit} className="space-y-8">
         {/* Identification Section */}
         <div className="bg-white p-6 rounded-lg shadow">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">Identificación</h3>
+          <h3 className="text-lg font-semibold text-gray-900 mb-4">
+            Identificación
+          </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -155,7 +164,9 @@ const FungiForm: React.FC<FungiFormProps> = ({ fungi, onSave, onCancel }) => {
                 type="text"
                 required
                 value={formData.codigoFungario}
-                onChange={(e) => handleInputChange("codigoFungario", e.target.value)}
+                onChange={(e) =>
+                  handleInputChange("codigoFungario", e.target.value)
+                }
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
               />
             </div>
@@ -166,7 +177,9 @@ const FungiForm: React.FC<FungiFormProps> = ({ fungi, onSave, onCancel }) => {
               <input
                 type="text"
                 value={formData.codigoAndres || ""}
-                onChange={(e) => handleInputChange("codigoAndres", e.target.value)}
+                onChange={(e) =>
+                  handleInputChange("codigoAndres", e.target.value)
+                }
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
               />
             </div>
@@ -198,7 +211,9 @@ const FungiForm: React.FC<FungiFormProps> = ({ fungi, onSave, onCancel }) => {
 
         {/* Sample Status Section */}
         <div className="bg-white p-6 rounded-lg shadow">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">Estado de Muestra</h3>
+          <h3 className="text-lg font-semibold text-gray-900 mb-4">
+            Estado de Muestra
+          </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-4">
               <div className="flex items-center">
@@ -206,10 +221,15 @@ const FungiForm: React.FC<FungiFormProps> = ({ fungi, onSave, onCancel }) => {
                   type="checkbox"
                   id="muestraConservada"
                   checked={formData.muestraConservada}
-                  onChange={(e) => handleInputChange("muestraConservada", e.target.checked)}
+                  onChange={(e) =>
+                    handleInputChange("muestraConservada", e.target.checked)
+                  }
                   className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
                 />
-                <label htmlFor="muestraConservada" className="ml-2 text-sm text-gray-700">
+                <label
+                  htmlFor="muestraConservada"
+                  className="ml-2 text-sm text-gray-700"
+                >
                   Muestra conservada
                 </label>
               </div>
@@ -218,10 +238,15 @@ const FungiForm: React.FC<FungiFormProps> = ({ fungi, onSave, onCancel }) => {
                   type="checkbox"
                   id="adnExtraido"
                   checked={formData.adnExtraido}
-                  onChange={(e) => handleInputChange("adnExtraido", e.target.checked)}
+                  onChange={(e) =>
+                    handleInputChange("adnExtraido", e.target.checked)
+                  }
                   className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
                 />
-                <label htmlFor="adnExtraido" className="ml-2 text-sm text-gray-700">
+                <label
+                  htmlFor="adnExtraido"
+                  className="ml-2 text-sm text-gray-700"
+                >
                   ADN extraído
                 </label>
               </div>
@@ -234,7 +259,9 @@ const FungiForm: React.FC<FungiFormProps> = ({ fungi, onSave, onCancel }) => {
                 <input
                   type="text"
                   value={formData.numeroExtractoAdn || ""}
-                  onChange={(e) => handleInputChange("numeroExtractoAdn", e.target.value)}
+                  onChange={(e) =>
+                    handleInputChange("numeroExtractoAdn", e.target.value)
+                  }
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
                 />
               </div>
@@ -255,7 +282,9 @@ const FungiForm: React.FC<FungiFormProps> = ({ fungi, onSave, onCancel }) => {
 
         {/* Ecological Information Section */}
         <div className="bg-white p-6 rounded-lg shadow">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">Información Ecológica</h3>
+          <h3 className="text-lg font-semibold text-gray-900 mb-4">
+            Información Ecológica
+          </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -275,7 +304,9 @@ const FungiForm: React.FC<FungiFormProps> = ({ fungi, onSave, onCancel }) => {
               <input
                 type="text"
                 value={formData.arbolAsociado || ""}
-                onChange={(e) => handleInputChange("arbolAsociado", e.target.value)}
+                onChange={(e) =>
+                  handleInputChange("arbolAsociado", e.target.value)
+                }
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
               />
             </div>
@@ -285,7 +316,9 @@ const FungiForm: React.FC<FungiFormProps> = ({ fungi, onSave, onCancel }) => {
               </label>
               <select
                 value={formData.nativaExotica || ""}
-                onChange={(e) => handleInputChange("nativaExotica", e.target.value)}
+                onChange={(e) =>
+                  handleInputChange("nativaExotica", e.target.value)
+                }
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
               >
                 <option value="">Seleccionar...</option>
@@ -309,7 +342,9 @@ const FungiForm: React.FC<FungiFormProps> = ({ fungi, onSave, onCancel }) => {
 
         {/* Morphological Characteristics Section */}
         <div className="bg-white p-6 rounded-lg shadow">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">Características Morfológicas</h3>
+          <h3 className="text-lg font-semibold text-gray-900 mb-4">
+            Características Morfológicas
+          </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -318,7 +353,12 @@ const FungiForm: React.FC<FungiFormProps> = ({ fungi, onSave, onCancel }) => {
               <input
                 type="number"
                 value={formData.numeroCarpoforos || ""}
-                onChange={(e) => handleInputChange("numeroCarpoforos", e.target.value ? parseInt(e.target.value) : undefined)}
+                onChange={(e) =>
+                  handleInputChange(
+                    "numeroCarpoforos",
+                    e.target.value ? parseInt(e.target.value) : undefined
+                  )
+                }
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
               />
             </div>
@@ -395,7 +435,9 @@ const FungiForm: React.FC<FungiFormProps> = ({ fungi, onSave, onCancel }) => {
 
         {/* Physical Measurements Section */}
         <div className="bg-white p-6 rounded-lg shadow">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">Medidas Físicas</h3>
+          <h3 className="text-lg font-semibold text-gray-900 mb-4">
+            Medidas Físicas
+          </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -405,7 +447,12 @@ const FungiForm: React.FC<FungiFormProps> = ({ fungi, onSave, onCancel }) => {
                 type="number"
                 step="0.1"
                 value={formData.largoCuerpo || ""}
-                onChange={(e) => handleInputChange("largoCuerpo", e.target.value ? parseFloat(e.target.value) : undefined)}
+                onChange={(e) =>
+                  handleInputChange(
+                    "largoCuerpo",
+                    e.target.value ? parseFloat(e.target.value) : undefined
+                  )
+                }
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
               />
             </div>
@@ -417,7 +464,12 @@ const FungiForm: React.FC<FungiFormProps> = ({ fungi, onSave, onCancel }) => {
                 type="number"
                 step="0.1"
                 value={formData.diametroSombrero || ""}
-                onChange={(e) => handleInputChange("diametroSombrero", e.target.value ? parseFloat(e.target.value) : undefined)}
+                onChange={(e) =>
+                  handleInputChange(
+                    "diametroSombrero",
+                    e.target.value ? parseFloat(e.target.value) : undefined
+                  )
+                }
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
               />
             </div>
@@ -428,7 +480,12 @@ const FungiForm: React.FC<FungiFormProps> = ({ fungi, onSave, onCancel }) => {
               <input
                 type="number"
                 value={formData.altitud || ""}
-                onChange={(e) => handleInputChange("altitud", e.target.value ? parseFloat(e.target.value) : undefined)}
+                onChange={(e) =>
+                  handleInputChange(
+                    "altitud",
+                    e.target.value ? parseFloat(e.target.value) : undefined
+                  )
+                }
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
               />
             </div>
@@ -437,7 +494,9 @@ const FungiForm: React.FC<FungiFormProps> = ({ fungi, onSave, onCancel }) => {
 
         {/* Location Information Section */}
         <div className="bg-white p-6 rounded-lg shadow">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">Información de Ubicación</h3>
+          <h3 className="text-lg font-semibold text-gray-900 mb-4">
+            Información de Ubicación
+          </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -445,8 +504,17 @@ const FungiForm: React.FC<FungiFormProps> = ({ fungi, onSave, onCancel }) => {
               </label>
               <input
                 type="date"
-                value={formData.fecha ? formData.fecha.toISOString().split('T')[0] : ""}
-                onChange={(e) => handleInputChange("fecha", e.target.value ? new Date(e.target.value) : undefined)}
+                value={
+                  formData.fecha
+                    ? formData.fecha.toISOString().split("T")[0]
+                    : ""
+                }
+                onChange={(e) =>
+                  handleInputChange(
+                    "fecha",
+                    e.target.value ? new Date(e.target.value) : undefined
+                  )
+                }
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
               />
             </div>
@@ -502,7 +570,10 @@ const FungiForm: React.FC<FungiFormProps> = ({ fungi, onSave, onCancel }) => {
                 multiple
                 value={formData.collectorIds || []}
                 onChange={(e) => {
-                  const selectedOptions = Array.from(e.target.selectedOptions, option => option.value);
+                  const selectedOptions = Array.from(
+                    e.target.selectedOptions,
+                    (option) => option.value
+                  );
                   handleInputChange("collectorIds", selectedOptions);
                 }}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
@@ -520,7 +591,9 @@ const FungiForm: React.FC<FungiFormProps> = ({ fungi, onSave, onCancel }) => {
 
         {/* Coordinates Section */}
         <div className="bg-white p-6 rounded-lg shadow">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">Coordenadas</h3>
+          <h3 className="text-lg font-semibold text-gray-900 mb-4">
+            Coordenadas
+          </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -530,7 +603,12 @@ const FungiForm: React.FC<FungiFormProps> = ({ fungi, onSave, onCancel }) => {
                 type="number"
                 step="any"
                 value={formData.coordenadaX || ""}
-                onChange={(e) => handleInputChange("coordenadaX", e.target.value ? parseFloat(e.target.value) : undefined)}
+                onChange={(e) =>
+                  handleInputChange(
+                    "coordenadaX",
+                    e.target.value ? parseFloat(e.target.value) : undefined
+                  )
+                }
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
               />
             </div>
@@ -542,7 +620,12 @@ const FungiForm: React.FC<FungiFormProps> = ({ fungi, onSave, onCancel }) => {
                 type="number"
                 step="any"
                 value={formData.coordenadaY || ""}
-                onChange={(e) => handleInputChange("coordenadaY", e.target.value ? parseFloat(e.target.value) : undefined)}
+                onChange={(e) =>
+                  handleInputChange(
+                    "coordenadaY",
+                    e.target.value ? parseFloat(e.target.value) : undefined
+                  )
+                }
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
               />
             </div>
@@ -554,7 +637,12 @@ const FungiForm: React.FC<FungiFormProps> = ({ fungi, onSave, onCancel }) => {
                 type="number"
                 step="any"
                 value={formData.utmX || ""}
-                onChange={(e) => handleInputChange("utmX", e.target.value ? parseFloat(e.target.value) : undefined)}
+                onChange={(e) =>
+                  handleInputChange(
+                    "utmX",
+                    e.target.value ? parseFloat(e.target.value) : undefined
+                  )
+                }
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
               />
             </div>
@@ -566,7 +654,12 @@ const FungiForm: React.FC<FungiFormProps> = ({ fungi, onSave, onCancel }) => {
                 type="number"
                 step="any"
                 value={formData.utmY || ""}
-                onChange={(e) => handleInputChange("utmY", e.target.value ? parseFloat(e.target.value) : undefined)}
+                onChange={(e) =>
+                  handleInputChange(
+                    "utmY",
+                    e.target.value ? parseFloat(e.target.value) : undefined
+                  )
+                }
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
               />
             </div>
@@ -575,7 +668,9 @@ const FungiForm: React.FC<FungiFormProps> = ({ fungi, onSave, onCancel }) => {
 
         {/* Spore Information Section */}
         <div className="bg-white p-6 rounded-lg shadow">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">Información de Esporas</h3>
+          <h3 className="text-lg font-semibold text-gray-900 mb-4">
+            Información de Esporas
+          </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -584,7 +679,9 @@ const FungiForm: React.FC<FungiFormProps> = ({ fungi, onSave, onCancel }) => {
               <input
                 type="text"
                 value={formData.sporeprint || ""}
-                onChange={(e) => handleInputChange("sporeprint", e.target.value)}
+                onChange={(e) =>
+                  handleInputChange("sporeprint", e.target.value)
+                }
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
               />
             </div>
@@ -595,7 +692,9 @@ const FungiForm: React.FC<FungiFormProps> = ({ fungi, onSave, onCancel }) => {
               <input
                 type="text"
                 value={formData.esporadaColor || ""}
-                onChange={(e) => handleInputChange("esporadaColor", e.target.value)}
+                onChange={(e) =>
+                  handleInputChange("esporadaColor", e.target.value)
+                }
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
               />
             </div>

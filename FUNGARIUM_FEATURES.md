@@ -1,23 +1,27 @@
 # Fungarium Features
 
 ## Overview
+
 The fungarium feature allows you to process CSV data containing fungi information and display it in a searchable, organized interface.
 
 ## New Features Added
 
 ### 1. CSV Processing (`/admin`)
+
 - Import fungi data from CSV files
 - Process CSV structure with all fungi metadata
 - Automatic data validation and parsing
 - Save processed data to Firestore database
 
 ### 2. Fungarium Display (`/fungarium`)
+
 - Browse all fungi in a grid layout
 - Search by code, genus, species, or location
 - Filter and sort capabilities
 - Card-based interface with preview images
 
 ### 3. Detailed Fungi View (`/fungarium/:id`)
+
 - Complete fungi information display
 - Taxonomic classification
 - Ecological information
@@ -30,14 +34,17 @@ The fungarium feature allows you to process CSV data containing fungi informatio
 ## File Structure
 
 ### Types (`app/types.ts`)
+
 - `Fungi` - Complete fungi data type
 - `NewFungi` - For creating new fungi records
 
 ### Utilities
+
 - `app/utils/csvProcessor.ts` - CSV parsing and data processing
 - `app/utils/imageProcessor.ts` - Image handling and Firebase upload
 
 ### Components
+
 - `app/components/CSVImport.tsx` - CSV import interface
 - `app/components/FungiDetail.tsx` - Detailed fungi display
 - `app/routes/admin.tsx` - Admin panel for CSV import
@@ -47,6 +54,7 @@ The fungarium feature allows you to process CSV data containing fungi informatio
 ## CSV Structure Expected
 
 The CSV should have the following columns:
+
 - Código Fungario (required)
 - Código Andres
 - Género (required)
@@ -86,6 +94,7 @@ The CSV should have the following columns:
 ## Image Organization
 
 Images should be organized in the following structure:
+
 ```
 /2024/
   /2024/
@@ -101,12 +110,14 @@ Images should be organized in the following structure:
 ```
 
 The system automatically determines the year based on the fungi code:
+
 - FRFA-001 to FRFA-059: 2024 folder
 - FRFA-060 and above: 2025 folder
 
 ## Navigation Updates
 
 Updated navigation includes:
+
 - Home page now shows "Ver Fungarium" button
 - Dashboard includes three main actions:
   - Ver Fungarium (browse all fungi)
@@ -120,12 +131,14 @@ Data is stored in Firestore under the `fungi` collection with document IDs match
 ## Usage Instructions
 
 1. **Import CSV Data:**
+
    - Go to `/admin`
    - Select your CSV file
    - Click "Procesar CSV" to validate data
    - Click "Guardar en Base de Datos" to save
 
 2. **Browse Fungi:**
+
    - Go to `/fungarium`
    - Use the search box to filter results
    - Click on any fungi card to view details
@@ -142,4 +155,4 @@ Data is stored in Firestore under the `fungi` collection with document IDs match
 - Boolean fields accept "Si"/"No" values
 - Date fields are automatically parsed
 - Numeric fields are converted appropriately
-- The system is designed for the specific CSV format used by the Revolución Fungi & Arbio project
+- The system is designed for the specific CSV format used by the Revolución Fungi

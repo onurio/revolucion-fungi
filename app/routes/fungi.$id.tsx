@@ -1,18 +1,13 @@
 import { useParams, Link } from "@remix-run/react";
 import { useState, useEffect } from "react";
 import { db } from "~/firebase.client";
-import { doc, getDoc } from "firebase/firestore";
+import { getDoc, collection, query, where, getDocs } from "firebase/firestore";
 import { Fungi, Collector } from "~/types";
 import FungiDetail from "~/components/FungiDetail";
 
 export default function FungiDetailPage() {
-  console.log("FungiDetailPage component is rendering!");
-  
   const params = useParams();
-  const fungiId = params.id;
-  
-  console.log("All params:", params);
-  console.log("Fungi ID from params:", fungiId);
+  const codigoFungario = params.id;
   const [fungi, setFungi] = useState<Fungi | null>(null);
   const [collector, setCollector] = useState<Collector | null>(null);
   const [loading, setLoading] = useState(true);
@@ -20,40 +15,38 @@ export default function FungiDetailPage() {
 
   useEffect(() => {
     const fetchFungi = async () => {
-      if (!fungiId) {
-        setError("ID de hongo no válido");
+      if (!codigoFungario) {
+        setError("Código fungario no válido");
         setLoading(false);
         return;
       }
 
-      console.log("Fetching fungi with ID:", fungiId);
-
       try {
-        const fungiDoc = doc(db, "fungi", fungiId);
-        const snapshot = await getDoc(fungiDoc);
-        
-        console.log("Document exists:", snapshot.exists());
-        if (snapshot.exists()) {
-          console.log("Document data:", snapshot.data());
-        }
-        
-        if (snapshot.exists()) {
+        const fungiCollection = collection(db, "fungi");
+        const q = query(
+          fungiCollection,
+          where("codigoFungario", "==", codigoFungario)
+        );
+        const querySnapshot = await getDocs(q);
+
+        if (!querySnapshot.empty) {
+          const doc = querySnapshot.docs[0];
           const fungiData = {
-            id: snapshot.id,
-            ...snapshot.data(),
-            fecha: snapshot.data().fecha?.toDate(),
-            createdAt: snapshot.data().createdAt?.toDate(),
-            updatedAt: snapshot.data().updatedAt?.toDate(),
+            id: doc.id,
+            ...doc.data(),
+            fecha: doc.data().fecha?.toDate(),
+            createdAt: doc.data().createdAt?.toDate(),
+            updatedAt: doc.data().updatedAt?.toDate(),
           } as Fungi;
-          
+
           setFungi(fungiData);
-          
+
           // Fetch collector if collectorId exists
           if (fungiData.collectorId) {
             try {
               const collectorDoc = doc(db, "collectors", fungiData.collectorId);
               const collectorSnapshot = await getDoc(collectorDoc);
-              
+
               if (collectorSnapshot.exists()) {
                 const collectorData = {
                   id: collectorSnapshot.id,
@@ -61,7 +54,7 @@ export default function FungiDetailPage() {
                   createdAt: collectorSnapshot.data().createdAt?.toDate(),
                   updatedAt: collectorSnapshot.data().updatedAt?.toDate(),
                 } as Collector;
-                
+
                 setCollector(collectorData);
               }
             } catch (collectorError) {
@@ -80,7 +73,7 @@ export default function FungiDetailPage() {
     };
 
     fetchFungi();
-  }, [fungiId]);
+  }, [codigoFungario]);
 
   if (loading) {
     return (
@@ -88,7 +81,7 @@ export default function FungiDetailPage() {
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
           <p className="text-gray-600">Cargando información del hongo...</p>
-          <p className="text-sm text-gray-500 mt-2">ID: {fungiId}</p>
+          <p className="text-sm text-gray-500 mt-2">Código: {codigoFungario}</p>
         </div>
       </div>
     );
@@ -115,7 +108,9 @@ export default function FungiDetailPage() {
     return (
       <div className="min-h-screen bg-gray-100 flex items-center justify-center">
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-gray-900 mb-4">Hongo no encontrado</h1>
+          <h1 className="text-2xl font-bold text-gray-900 mb-4">
+            Hongo no encontrado
+          </h1>
           <Link
             to="/fungarium"
             className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700"
@@ -130,26 +125,26 @@ export default function FungiDetailPage() {
   return (
     <div className="min-h-screen bg-gray-100 py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Navigation and Actions */}
-        <div className="mb-6 flex justify-between items-center">
+        {/* Navigation */}
+        <div className="mb-6">
           <Link
             to="/fungarium"
             className="inline-flex items-center text-blue-600 hover:text-blue-800 transition-colors"
           >
-            <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+            <svg
+              className="w-4 h-4 mr-2"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M15 19l-7-7 7-7"
+              />
             </svg>
             ← Volver al Fungarium
-          </Link>
-          
-          <Link
-            to={`/listing/${fungiId}/edit`}
-            className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 transition-colors"
-          >
-            <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-            </svg>
-            Editar
           </Link>
         </div>
 

@@ -24,15 +24,16 @@ const Listings: React.FC = () => {
       
       const fungiData: Fungi[] = [];
       querySnapshot.forEach((doc) => {
-        fungiData.push({
-          id: doc.id,
-          ...doc.data(),
-          createdAt: doc.data().createdAt?.toDate() || new Date(),
-          updatedAt: doc.data().updatedAt?.toDate() || new Date(),
-          fecha: doc.data().fecha?.toDate() || undefined,
-        } as Fungi);
+        const data = doc.data();
+        const fungiItem = {
+          ...data,
+          id: doc.id, // Ensure Firebase document ID overrides any id in the data
+          createdAt: data.createdAt?.toDate() || new Date(),
+          updatedAt: data.updatedAt?.toDate() || new Date(),
+          fecha: data.fecha?.toDate() || undefined,
+        } as Fungi;
+        fungiData.push(fungiItem);
       });
-      
       setFungi(fungiData);
     } catch (error) {
       console.error("Error fetching fungi:", error);
@@ -45,12 +46,12 @@ const Listings: React.FC = () => {
     fetchFungi();
   }, []);
 
-  const handleView = (id: string) => {
-    navigate(`/fungi/${id}`);
+  const handleView = (codigoFungario: string) => {
+    navigate(`/fungi/${codigoFungario}`);
   };
 
   const handleEdit = (id: string) => {
-    navigate(`/listing/${id}/edit`);
+    navigate(`/edit/${id}`);
   };
 
   const filteredFungi = fungi.filter(f => 
@@ -175,7 +176,7 @@ const Listings: React.FC = () => {
 
                 <div className="flex space-x-2 ml-4">
                   <button
-                    onClick={() => handleView(fungus.id)}
+                    onClick={() => handleView(fungus.codigoFungario)}
                     className="inline-flex items-center px-3 py-1.5 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
                   >
                     Ver
