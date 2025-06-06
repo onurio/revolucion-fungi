@@ -1,5 +1,49 @@
-import React from "react";
+import React, { useState } from "react";
 import { Fungi, Collector } from "~/types";
+
+interface LazyImageProps {
+  src: string;
+  alt: string;
+  className?: string;
+}
+
+const LazyImage: React.FC<LazyImageProps> = ({ src, alt, className = "" }) => {
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [hasError, setHasError] = useState(false);
+
+  return (
+    <div className="relative w-full h-full">
+      {/* Skeleton/Loading Animation */}
+      {!isLoaded && !hasError && (
+        <div className="absolute inset-0 bg-gray-200 animate-pulse flex items-center justify-center">
+          <div className="w-6 h-6 border-2 border-gray-300 border-t-gray-500 rounded-full animate-spin"></div>
+        </div>
+      )}
+      
+      {/* Actual Image */}
+      <img
+        src={src}
+        alt={alt}
+        loading="lazy"
+        className={`${className} ${isLoaded ? 'opacity-100' : 'opacity-0'} transition-opacity duration-300`}
+        onLoad={() => setIsLoaded(true)}
+        onError={() => setHasError(true)}
+      />
+      
+      {/* Error State */}
+      {hasError && (
+        <div className="absolute inset-0 bg-gray-100 flex items-center justify-center">
+          <div className="text-gray-400 text-center">
+            <svg className="w-8 h-8 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 18.5c-.77.833.192 2.5 1.732 2.5z" />
+            </svg>
+            <span className="text-xs">Error</span>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
 
 interface FungiDetailProps {
   fungi: Fungi;
@@ -35,7 +79,7 @@ const FungiDetail: React.FC<FungiDetailProps> = ({ fungi, collector }) => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {fungi.images.map((imageUrl, index) => (
               <div key={index} className="aspect-square overflow-hidden rounded-lg">
-                <img
+                <LazyImage
                   src={imageUrl}
                   alt={`${fungi.codigoFungario} - Imagen ${index + 1}`}
                   className="w-full h-full object-cover hover:scale-105 transition-transform duration-200"
