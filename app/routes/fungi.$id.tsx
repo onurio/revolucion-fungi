@@ -130,8 +130,8 @@ export default function FungiDetailPage() {
   return (
     <div className="min-h-screen bg-gray-100 py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Navigation */}
-        <div className="mb-6">
+        {/* Navigation and Actions */}
+        <div className="mb-6 flex justify-between items-center">
           <Link
             to="/fungarium"
             className="inline-flex items-center text-blue-600 hover:text-blue-800 transition-colors"
@@ -140,6 +140,16 @@ export default function FungiDetailPage() {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>
             ← Volver al Fungarium
+          </Link>
+          
+          <Link
+            to={`/listing/${fungiId}/edit`}
+            className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 transition-colors"
+          >
+            <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+            </svg>
+            Editar
           </Link>
         </div>
 

@@ -55,7 +55,7 @@ const Login: React.FC = () => {
             </svg>
           </div>
           <h2 className="text-2xl font-bold text-gray-900">Fungarium Admin</h2>
-          <p className="text-gray-600 mt-2">Revolución Fungi & Arbio</p>
+          <p className="text-gray-600 mt-2">Revolución Fungi</p>
         </div>
 
         <div className="space-y-4">

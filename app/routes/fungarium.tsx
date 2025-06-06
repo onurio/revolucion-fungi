@@ -1,5 +1,5 @@
+import React, { useState, useEffect } from "react";
 import { Link, useSearchParams } from "@remix-run/react";
-import { useState, useEffect } from "react";
 import { db } from "~/firebase.client";
 import { collection, getDocs, query, where, orderBy, limit } from "firebase/firestore";
 import { Fungi } from "~/types";
@@ -52,6 +52,8 @@ export default function FungariumPage() {
   const [fungi, setFungi] = useState<Fungi[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(12); // Grid layout works better with 12 (3x4 or 4x3)
   const [searchParams, setSearchParams] = useSearchParams();
 
   useEffect(() => {
@@ -87,6 +89,23 @@ export default function FungariumPage() {
     (f.lugar && f.lugar.toLowerCase().includes(searchTerm.toLowerCase()))
   );
 
+  // Reset to page 1 when search term changes
+  React.useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm]);
+
+  // Pagination calculations
+  const totalPages = Math.ceil(filteredFungi.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const currentFungi = filteredFungi.slice(startIndex, endIndex);
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    // Scroll to top when changing pages
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-100 flex items-center justify-center">
@@ -103,7 +122,7 @@ export default function FungariumPage() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-4">
-            Fungarium Revolución Fungi & Arbio
+            Fungarium Revolución Fungi
           </h1>
           <p className="text-gray-600 mb-6">
             Catálogo de hongos encontrados en Perú
@@ -124,13 +143,14 @@ export default function FungariumPage() {
         {/* Results Count */}
         <div className="mb-6">
           <p className="text-gray-600">
-            Mostrando {filteredFungi.length} de {fungi.length} registros
+            Mostrando {startIndex + 1}-{Math.min(endIndex, filteredFungi.length)} de {filteredFungi.length} registros
+            {filteredFungi.length !== fungi.length && ` (${fungi.length} total)`}
           </p>
         </div>
 
         {/* Fungi Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {filteredFungi.map((fungus) => (
+          {currentFungi.map((fungus) => (
             <Link
               key={fungus.id}
               to={`/fungi/${fungus.codigoFungario}`}
@@ -196,6 +216,54 @@ export default function FungariumPage() {
             <p className="text-gray-500 text-lg">
               No se encontraron hongos que coincidan con tu búsqueda.
             </p>
+          </div>
+        )}
+
+        {/* Pagination */}
+        {totalPages > 1 && (
+          <div className="flex items-center justify-center space-x-2 mt-12">
+            <button
+              onClick={() => handlePageChange(currentPage - 1)}
+              disabled={currentPage === 1}
+              className="px-4 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              Anterior
+            </button>
+            
+            {/* Page numbers */}
+            {Array.from({ length: totalPages }, (_, i) => i + 1)
+              .filter(page => {
+                // Show first page, last page, current page, and pages around current
+                return page === 1 || 
+                       page === totalPages || 
+                       Math.abs(page - currentPage) <= 2;
+              })
+              .map((page, index, array) => (
+                <React.Fragment key={page}>
+                  {/* Add ellipsis if there's a gap */}
+                  {index > 0 && array[index - 1] < page - 1 && (
+                    <span className="px-3 py-2 text-sm font-medium text-gray-500">...</span>
+                  )}
+                  <button
+                    onClick={() => handlePageChange(page)}
+                    className={`px-4 py-2 text-sm font-medium rounded-md ${
+                      currentPage === page
+                        ? 'text-white bg-blue-600 border border-blue-600'
+                        : 'text-gray-500 bg-white border border-gray-300 hover:bg-gray-50'
+                    }`}
+                  >
+                    {page}
+                  </button>
+                </React.Fragment>
+              ))}
+            
+            <button
+              onClick={() => handlePageChange(currentPage + 1)}
+              disabled={currentPage === totalPages}
+              className="px-4 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              Siguiente
+            </button>
           </div>
         )}
       </div>

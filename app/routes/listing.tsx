@@ -1,7 +1,7 @@
 import React from "react";
 import ProtectedRoute from "~/components/ProtectedRoute.client";
 import AdminLayout from "~/components/AdminLayout.client";
-import RegistryForm from "~/components/RegistryForm";
+import FungiForm from "~/components/FungiForm.client";
 
 const Index: React.FC = () => {
   return (
@@ -15,11 +15,7 @@ const Index: React.FC = () => {
             </p>
           </div>
           
-          <div className="bg-white rounded-lg shadow">
-            <div className="p-6">
-              <RegistryForm />
-            </div>
-          </div>
+          <FungiForm />
         </div>
       </AdminLayout>
     </ProtectedRoute>
