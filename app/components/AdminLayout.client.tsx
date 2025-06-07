@@ -25,7 +25,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
   const navigationItems = [
     {
       name: "Dashboard",
-      href: "/dashboard",
+      href: "/admin",
       icon: (
         <svg
           className="w-5 h-5"
@@ -94,7 +94,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
     },
     {
       name: "Importar CSV",
-      href: "/admin",
+      href: "/import",
       icon: (
         <svg
           className="w-5 h-5"

@@ -20,7 +20,7 @@ const Home: React.FC = () => {
           </Link>
           
           <Link
-            to="/dashboard"
+            to="/admin"
             className="block w-full px-4 py-2 text-white bg-indigo-600 rounded-md hover:bg-indigo-700 transition-colors"
           >
             Panel de Control
