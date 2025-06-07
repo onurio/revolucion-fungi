@@ -1,17 +1,18 @@
 import { useParams, Link } from "@remix-run/react";
 import { useState, useEffect } from "react";
 import { db } from "~/firebase.client";
-import { getDoc, collection, query, where, getDocs } from "firebase/firestore";
+import { collection, query, where, getDocs } from "firebase/firestore";
 import { Fungi, Collector } from "~/types";
 import FungiDetail from "~/components/FungiDetail";
+import { useCollectors } from "~/contexts/CollectorsContext.client";
 
 export default function FungiDetailPage() {
   const params = useParams();
   const codigoFungario = params.id;
   const [fungi, setFungi] = useState<Fungi | null>(null);
-  const [collector, setCollector] = useState<Collector | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const { getCollectorById } = useCollectors();
 
   useEffect(() => {
     const fetchFungi = async () => {
@@ -40,27 +41,6 @@ export default function FungiDetailPage() {
           } as Fungi;
 
           setFungi(fungiData);
-
-          // Fetch collector if collectorId exists
-          if (fungiData.collectorId) {
-            try {
-              const collectorDoc = doc(db, "collectors", fungiData.collectorId);
-              const collectorSnapshot = await getDoc(collectorDoc);
-
-              if (collectorSnapshot.exists()) {
-                const collectorData = {
-                  id: collectorSnapshot.id,
-                  ...collectorSnapshot.data(),
-                  createdAt: collectorSnapshot.data().createdAt?.toDate(),
-                  updatedAt: collectorSnapshot.data().updatedAt?.toDate(),
-                } as Collector;
-
-                setCollector(collectorData);
-              }
-            } catch (collectorError) {
-              console.error("Error fetching collector:", collectorError);
-            }
-          }
         } else {
           setError("Hongo no encontrado");
         }
@@ -148,7 +128,10 @@ export default function FungiDetailPage() {
           </Link>
         </div>
 
-        <FungiDetail fungi={fungi} collector={collector || undefined} />
+        <FungiDetail 
+          fungi={fungi} 
+          collectors={fungi.collectorIds?.map(id => getCollectorById(id)).filter(Boolean) || []} 
+        />
       </div>
     </div>
   );

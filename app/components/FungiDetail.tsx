@@ -47,10 +47,10 @@ const LazyImage: React.FC<LazyImageProps> = ({ src, alt, className = "" }) => {
 
 interface FungiDetailProps {
   fungi: Fungi;
-  collector?: Collector;
+  collectors?: Collector[];
 }
 
-const FungiDetail: React.FC<FungiDetailProps> = ({ fungi, collector }) => {
+const FungiDetail: React.FC<FungiDetailProps> = ({ fungi, collectors = [] }) => {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [selectedImageIndex, setSelectedImageIndex] = useState<number>(0);
   const [modalImageLoading, setModalImageLoading] = useState<boolean>(false);
@@ -276,8 +276,13 @@ const FungiDetail: React.FC<FungiDetailProps> = ({ fungi, collector }) => {
               <span className="ml-2 text-gray-900">{formatValue(fungi.region)}</span>
             </div>
             <div>
-              <span className="font-medium text-gray-700">Colector:</span>
-              <span className="ml-2 text-gray-900">{collector ? collector.name : "Desconocido"}</span>
+              <span className="font-medium text-gray-700">Colector{collectors.length > 1 ? 'es' : ''}:</span>
+              <span className="ml-2 text-gray-900">
+                {collectors.length > 0 
+                  ? collectors.map(collector => collector.name).join(', ')
+                  : "Desconocido"
+                }
+              </span>
             </div>
           </div>
         </div>

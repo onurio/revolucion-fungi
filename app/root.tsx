@@ -7,6 +7,7 @@ import {
 } from "@remix-run/react";
 import "./tailwind.css";
 import { UserProvider } from "./contexts/UserContext.client";
+import { CollectorsProvider } from "./contexts/CollectorsContext.client";
 import Loader from "~/components/Loader.client";
 
 export function Layout({ children }: { children: React.ReactNode }) {
@@ -30,7 +31,9 @@ export function Layout({ children }: { children: React.ReactNode }) {
 export default function App() {
   return (
     <UserProvider>
-      <Outlet />
+      <CollectorsProvider>
+        <Outlet />
+      </CollectorsProvider>
     </UserProvider>
   );
 }
