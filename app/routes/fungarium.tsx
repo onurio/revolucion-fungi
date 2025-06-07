@@ -51,10 +51,12 @@ const LazyImage: React.FC<LazyImageProps> = ({ src, alt, className = "" }) => {
 export default function FungariumPage() {
   const [fungi, setFungi] = useState<Fungi[]>([]);
   const [loading, setLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(12); // Grid layout works better with 12 (3x4 or 4x3)
   const [searchParams, setSearchParams] = useSearchParams();
+  
+  // Get values from URL search params
+  const searchTerm = searchParams.get("search") || "";
+  const currentPage = parseInt(searchParams.get("page") || "1", 10);
 
   useEffect(() => {
     const fetchFungi = async () => {
@@ -91,8 +93,19 @@ export default function FungariumPage() {
 
   // Reset to page 1 when search term changes
   React.useEffect(() => {
-    setCurrentPage(1);
-  }, [searchTerm]);
+    if (searchTerm && currentPage !== 1) {
+      setSearchParams(prev => {
+        const newParams = new URLSearchParams(prev);
+        newParams.set("page", "1");
+        if (searchTerm) {
+          newParams.set("search", searchTerm);
+        } else {
+          newParams.delete("search");
+        }
+        return newParams;
+      });
+    }
+  }, [searchTerm, currentPage, setSearchParams]);
 
   // Pagination calculations
   const totalPages = Math.ceil(filteredFungi.length / itemsPerPage);
@@ -101,9 +114,27 @@ export default function FungariumPage() {
   const currentFungi = filteredFungi.slice(startIndex, endIndex);
 
   const handlePageChange = (page: number) => {
-    setCurrentPage(page);
+    setSearchParams(prev => {
+      const newParams = new URLSearchParams(prev);
+      newParams.set("page", page.toString());
+      return newParams;
+    });
     // Scroll to top when changing pages
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleSearchChange = (value: string) => {
+    setSearchParams(prev => {
+      const newParams = new URLSearchParams(prev);
+      if (value) {
+        newParams.set("search", value);
+        newParams.set("page", "1"); // Reset to page 1 on new search
+      } else {
+        newParams.delete("search");
+        newParams.set("page", "1");
+      }
+      return newParams;
+    });
   };
 
   if (loading) {
@@ -134,7 +165,7 @@ export default function FungariumPage() {
               type="text"
               placeholder="Buscar por código, género, especie o lugar..."
               value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
+              onChange={(e) => handleSearchChange(e.target.value)}
               className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
             />
           </div>
