@@ -115,8 +115,8 @@ const Listings: React.FC = () => {
         </div>
       )}
 
-      {/* Fungi List */}
-      <div className="space-y-4">
+      {/* Fungi Table */}
+      <div className="bg-white rounded-lg shadow overflow-hidden">
         {fungi.length === 0 ? (
           <div className="text-center py-8 text-gray-500">
             <p>No hay registros de hongos aún.</p>
@@ -138,59 +138,94 @@ const Listings: React.FC = () => {
             </button>
           </div>
         ) : (
-          currentFungi.map((fungus) => (
-            <div
-              key={fungus.id}
-              className="bg-white border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow"
-            >
-              <div className="flex justify-between items-start">
-                <div className="flex-1">
-                  <div className="flex items-center space-x-2 mb-2">
-                    <h3 className="text-lg font-semibold text-gray-900">
-                      {fungus.codigoFungario}
-                    </h3>
-                    {fungus.adnExtraido && (
-                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                        ADN
-                      </span>
-                    )}
-                  </div>
-                  
-                  <p className="text-gray-600 italic mb-2">
-                    <span className="font-medium">{fungus.genero}</span>
-                    {fungus.especie && <span> {fungus.especie}</span>}
-                  </p>
-                  
-                  <div className="text-sm text-gray-500 space-y-1">
-                    {fungus.lugar && (
-                      <p>📍 {fungus.lugar}</p>
-                    )}
-                    {fungus.fecha && (
-                      <p>📅 {fungus.fecha.toLocaleDateString()}</p>
-                    )}
-                    {fungus.images.length > 0 && (
-                      <p>🖼️ {fungus.images.length} imagen{fungus.images.length !== 1 ? 'es' : ''}</p>
-                    )}
-                  </div>
-                </div>
-
-                <div className="flex space-x-2 ml-4">
-                  <button
-                    onClick={() => handleView(fungus.codigoFungario)}
-                    className="inline-flex items-center px-3 py-1.5 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-                  >
-                    Ver
-                  </button>
-                  <button
-                    onClick={() => handleEdit(fungus.id)}
-                    className="inline-flex items-center px-3 py-1.5 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-                  >
-                    Editar
-                  </button>
-                </div>
-              </div>
-            </div>
-          ))
+          <div className="overflow-x-auto">
+            <table className="min-w-full divide-y divide-gray-200">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Código
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Género / Especie
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Lugar
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Fecha
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    ADN
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Imágenes
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Acciones
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-200">
+                {currentFungi.map((fungus) => (
+                  <tr key={fungus.id} className="hover:bg-gray-50">
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="text-sm font-medium text-gray-900">
+                        {fungus.codigoFungario}
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="text-sm text-gray-900">
+                        <span className="font-medium italic">{fungus.genero}</span>
+                        {fungus.especie && <span className="italic"> {fungus.especie}</span>}
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="text-sm text-gray-500">
+                        {fungus.lugar || '-'}
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="text-sm text-gray-500">
+                        {fungus.fecha ? fungus.fecha.toLocaleDateString() : '-'}
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      {fungus.adnExtraido ? (
+                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                          Sí
+                        </span>
+                      ) : (
+                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                          No
+                        </span>
+                      )}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="text-sm text-gray-500">
+                        {fungus.images.length}
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                      <div className="flex space-x-2">
+                        <button
+                          onClick={() => handleView(fungus.codigoFungario)}
+                          className="text-blue-600 hover:text-blue-900"
+                        >
+                          Ver
+                        </button>
+                        <button
+                          onClick={() => handleEdit(fungus.id)}
+                          className="text-indigo-600 hover:text-indigo-900"
+                        >
+                          Editar
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         )}
       </div>
 
