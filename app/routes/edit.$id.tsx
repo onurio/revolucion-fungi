@@ -75,7 +75,7 @@ const EditFungi: React.FC = () => {
       await deleteDoc(fungiDoc);
 
       // Navigate to dashboard after successful deletion
-      navigate("/dashboard");
+      navigate("/admin");
     } catch (error) {
       console.error("Error deleting fungi:", error);
       alert("Error al eliminar el hongo. Por favor, inténtalo de nuevo.");
@@ -95,7 +95,7 @@ const EditFungi: React.FC = () => {
               {error || "Hongo no encontrado"}
             </div>
             <button
-              onClick={() => navigate("/dashboard")}
+              onClick={() => navigate("/admin")}
               className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
             >
               Volver al Dashboard

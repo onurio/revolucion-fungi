@@ -136,7 +136,7 @@ const FungiForm: React.FC<FungiFormProps> = ({ fungi, onSave, onCancel }) => {
       if (onSave) {
         onSave();
       } else {
-        navigate("/dashboard");
+        navigate("/admin");
       }
     } catch (error) {
       console.error("Error saving fungi:", error);

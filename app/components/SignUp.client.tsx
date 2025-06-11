@@ -19,7 +19,7 @@ const SignUp: React.FC = () => {
     try {
       setLoading(true);
       await createUserWithEmailAndPassword(auth, email, password);
-      navigate("/dashboard");
+      navigate("/admin");
     } catch (error) {
       if (error instanceof Error) setError(error.message);
     } finally {

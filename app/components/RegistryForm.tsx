@@ -39,7 +39,7 @@ const RegistryForm: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     await saveRegistry(registry);
-    navigate("/dashboard");
+    navigate("/admin");
   };
 
   return (
