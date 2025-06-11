@@ -12,7 +12,7 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   // List of authorized admin emails
   const AUTHORIZED_ADMINS = [
     "omrinuri@gmail.com",
-    "revolucionfungi@gmail.com"
+    "micelio@revolucionfungi.com",
   ];
 
   useEffect(() => {
