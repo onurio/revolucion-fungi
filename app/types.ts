@@ -46,6 +46,8 @@ export type Fungi = {
   collectorId?: string;
   collectorIds?: string[];
   images: string[];
+  thumbnailUrl?: string; // URL of the selected thumbnail image
+  imageOrder?: number[]; // Array of indices to define custom image order
   createdAt: Date;
   updatedAt: Date;
 };

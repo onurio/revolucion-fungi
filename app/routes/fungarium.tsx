@@ -191,7 +191,7 @@ export default function FungariumPage() {
                 <div className="aspect-square bg-gray-200 rounded-lg mb-4 overflow-hidden">
                   {fungus.images.length > 0 ? (
                     <LazyImage
-                      src={fungus.images[0]}
+                      src={fungus.thumbnailUrl || fungus.images[0]}
                       alt={fungus.codigoFungario}
                       className="w-full h-full object-cover"
                     />

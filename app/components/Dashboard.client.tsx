@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { useUser } from "~/contexts/UserContext.client";
 import Loader from "./Loader.client";
 import Listings from "./Listings";
-import AdminLayout from "./AdminLayout.client";
 import { db } from "~/firebase.client";
 import { collection, getDocs, query, where } from "firebase/firestore";
 
@@ -71,15 +70,14 @@ const Dashboard: React.FC = () => {
   if (loading) return <Loader />;
 
   return (
-    <AdminLayout>
-      <div className="space-y-6">
-        <div>
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">Dashboard</h2>
-          <p className="text-gray-600">Bienvenido, {user?.email}</p>
-        </div>
+    <div className="space-y-6">
+      <div>
+        <h2 className="text-2xl font-bold text-gray-900 mb-2">Dashboard</h2>
+        <p className="text-gray-600">Bienvenido, {user?.email}</p>
+      </div>
 
-        {/* Quick Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      {/* Quick Stats */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           <div className="bg-white rounded-lg shadow p-6">
             <div className="flex items-center">
               <div className="flex-shrink-0">
@@ -151,19 +149,18 @@ const Dashboard: React.FC = () => {
               </div>
             </div>
           </div>
-        </div>
+      </div>
 
-        {/* Recent Listings */}
-        <div className="bg-white rounded-lg shadow">
-          <div className="px-6 py-4 border-b border-gray-200">
-            <h3 className="text-lg font-medium text-gray-900">Registros Recientes</h3>
-          </div>
-          <div className="p-6">
-            <Listings />
-          </div>
+      {/* Recent Listings */}
+      <div className="bg-white rounded-lg shadow">
+        <div className="px-6 py-4 border-b border-gray-200">
+          <h3 className="text-lg font-medium text-gray-900">Registros Recientes</h3>
+        </div>
+        <div className="p-6">
+          <Listings />
         </div>
       </div>
-    </AdminLayout>
+    </div>
   );
 };
 

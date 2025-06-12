@@ -2,14 +2,14 @@ import { useParams, Link } from "@remix-run/react";
 import { useState, useEffect } from "react";
 import { db } from "~/firebase.client";
 import { collection, query, where, getDocs } from "firebase/firestore";
-import { Fungi, Collector } from "~/types";
+import { FungiWithDynamicFields, Collector } from "~/types";
 import FungiDetail from "~/components/FungiDetail";
 import { useCollectors } from "~/contexts/CollectorsContext.client";
 
 export default function FungiDetailPage() {
   const params = useParams();
   const codigoFungario = params.id;
-  const [fungi, setFungi] = useState<Fungi | null>(null);
+  const [fungi, setFungi] = useState<FungiWithDynamicFields | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const { getCollectorById } = useCollectors();
@@ -32,13 +32,14 @@ export default function FungiDetailPage() {
 
         if (!querySnapshot.empty) {
           const doc = querySnapshot.docs[0];
+          const docData = doc.data();
           const fungiData = {
             id: doc.id,
-            ...doc.data(),
-            fecha: doc.data().fecha?.toDate(),
-            createdAt: doc.data().createdAt?.toDate(),
-            updatedAt: doc.data().updatedAt?.toDate(),
-          } as Fungi;
+            ...docData,
+            fecha: docData.fecha?.toDate(),
+            createdAt: docData.createdAt?.toDate(),
+            updatedAt: docData.updatedAt?.toDate(),
+          } as FungiWithDynamicFields;
 
           setFungi(fungiData);
         } else {

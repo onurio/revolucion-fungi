@@ -1,6 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
+import { Link } from "@remix-run/react";
 import { Fungi, Collector, FungiField, FungiWithDynamicFields } from "~/types";
 import { getDynamicFields } from "~/services/dynamicFields";
+import { useUser } from "~/contexts/UserContext.client";
+import { checkAdminStatus } from "~/utils/admin.client";
 
 interface LazyImageProps {
   src: string;
@@ -56,6 +59,16 @@ const FungiDetail: React.FC<FungiDetailProps> = ({ fungi, collectors = [] }) => 
   const [selectedImageIndex, setSelectedImageIndex] = useState<number>(0);
   const [modalImageLoading, setModalImageLoading] = useState<boolean>(false);
   const [dynamicFields, setDynamicFields] = useState<FungiField[]>([]);
+  const { user } = useUser();
+  const isAdmin = checkAdminStatus(user);
+
+  // Get ordered images based on imageOrder or use default order
+  const orderedImages = useMemo(() => {
+    if (fungi.imageOrder && fungi.imageOrder.length === fungi.images.length) {
+      return fungi.imageOrder.map(index => fungi.images[index]);
+    }
+    return fungi.images;
+  }, [fungi.images, fungi.imageOrder]);
 
   useEffect(() => {
     loadDynamicFields();
@@ -91,40 +104,67 @@ const FungiDetail: React.FC<FungiDetailProps> = ({ fungi, collectors = [] }) => 
   };
 
   const navigateImage = (direction: 'prev' | 'next') => {
-    if (!fungi.images.length) return;
+    if (!orderedImages.length) return;
     
     let newIndex = selectedImageIndex;
     if (direction === 'prev') {
-      newIndex = selectedImageIndex > 0 ? selectedImageIndex - 1 : fungi.images.length - 1;
+      newIndex = selectedImageIndex > 0 ? selectedImageIndex - 1 : orderedImages.length - 1;
     } else {
-      newIndex = selectedImageIndex < fungi.images.length - 1 ? selectedImageIndex + 1 : 0;
+      newIndex = selectedImageIndex < orderedImages.length - 1 ? selectedImageIndex + 1 : 0;
     }
     
     setModalImageLoading(true);
     setSelectedImageIndex(newIndex);
-    setSelectedImage(fungi.images[newIndex]);
+    setSelectedImage(orderedImages[newIndex]);
   };
 
   return (
     <div className="max-w-4xl mx-auto p-6 bg-white rounded-lg shadow-lg">
       <div className="border-b border-gray-200 pb-6 mb-6">
-        <h1 className="text-3xl font-bold text-gray-900">
-          {fungi.codigoFungario}
-        </h1>
-        <p className="text-xl text-gray-600 mt-2">
-          <em>{fungi.genero}</em>
-          {fungi.especie && (
-            <span> <em>{fungi.especie}</em></span>
+        <div className="flex justify-between items-start">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900">
+              {fungi.codigoFungario}
+            </h1>
+            <p className="text-xl text-gray-600 mt-2">
+              <em>{fungi.genero}</em>
+              {fungi.especie && (
+                <span> <em>{fungi.especie}</em></span>
+              )}
+            </p>
+          </div>
+          
+          {/* Admin Edit Button */}
+          {isAdmin && (
+            <Link
+              to={`/edit/${fungi.id}`}
+              className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
+            >
+              <svg
+                className="w-4 h-4 mr-2"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                />
+              </svg>
+              Editar
+            </Link>
           )}
-        </p>
+        </div>
       </div>
 
       {/* Images */}
-      {fungi.images.length > 0 && (
+      {orderedImages.length > 0 && (
         <div className="mb-8">
           <h2 className="text-xl font-semibold text-gray-900 mb-4">Imágenes</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {fungi.images.map((imageUrl, index) => (
+            {orderedImages.map((imageUrl, index) => (
               <div 
                 key={index} 
                 className="aspect-square overflow-hidden rounded-lg cursor-pointer"
@@ -396,11 +436,11 @@ const FungiDetail: React.FC<FungiDetailProps> = ({ fungi, collectors = [] }) => 
           className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50"
           onClick={closeImageModal}
         >
-          <div className="relative max-w-4xl max-h-full min-w-96 min-h-96 p-4 bg-gray-900 rounded-lg">
+          <div className="relative w-[95vw] h-[95vh] bg-gray-900 rounded-lg">
             {/* Close button */}
             <button
               onClick={closeImageModal}
-              className="absolute top-4 right-4 text-white hover:text-gray-300 z-10"
+              className="absolute top-2 right-2 text-white hover:text-gray-300 z-10"
             >
               <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -408,14 +448,14 @@ const FungiDetail: React.FC<FungiDetailProps> = ({ fungi, collectors = [] }) => 
             </button>
 
             {/* Navigation buttons */}
-            {fungi.images.length > 1 && (
+            {orderedImages.length > 1 && (
               <>
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
                     navigateImage('prev');
                   }}
-                  className="absolute left-4 top-1/2 transform -translate-y-1/2 text-white hover:text-gray-300 z-10"
+                  className="absolute left-2 top-1/2 transform -translate-y-1/2 text-white hover:text-gray-300 z-10"
                 >
                   <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -426,7 +466,7 @@ const FungiDetail: React.FC<FungiDetailProps> = ({ fungi, collectors = [] }) => 
                     e.stopPropagation();
                     navigateImage('next');
                   }}
-                  className="absolute right-4 top-1/2 transform -translate-y-1/2 text-white hover:text-gray-300 z-10"
+                  className="absolute right-2 top-1/2 transform -translate-y-1/2 text-white hover:text-gray-300 z-10"
                 >
                   <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -437,7 +477,7 @@ const FungiDetail: React.FC<FungiDetailProps> = ({ fungi, collectors = [] }) => 
 
             {/* Loading overlay */}
             {modalImageLoading && (
-              <div className="absolute inset-4 flex items-center justify-center">
+              <div className="absolute inset-0 flex items-center justify-center">
                 <div className="bg-black bg-opacity-50 rounded-lg p-4">
                   <div className="w-8 h-8 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
                 </div>
@@ -448,16 +488,16 @@ const FungiDetail: React.FC<FungiDetailProps> = ({ fungi, collectors = [] }) => 
             <img
               src={selectedImage}
               alt={`${fungi.codigoFungario} - Imagen ${selectedImageIndex + 1}`}
-              className={`max-w-full max-h-full object-contain transition-opacity duration-300 ${modalImageLoading ? 'opacity-0' : 'opacity-100'}`}
+              className={`w-full h-full object-contain transition-opacity duration-300 ${modalImageLoading ? 'opacity-0' : 'opacity-100'}`}
               onClick={(e) => e.stopPropagation()}
               onLoad={() => setModalImageLoading(false)}
               onError={() => setModalImageLoading(false)}
             />
 
             {/* Image counter */}
-            {fungi.images.length > 1 && (
-              <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 text-white bg-black bg-opacity-50 px-3 py-1 rounded">
-                {selectedImageIndex + 1} / {fungi.images.length}
+            {orderedImages.length > 1 && (
+              <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 text-white bg-black bg-opacity-50 px-3 py-1 rounded">
+                {selectedImageIndex + 1} / {orderedImages.length}
               </div>
             )}
           </div>

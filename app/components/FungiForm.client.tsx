@@ -9,7 +9,7 @@ import {
   getDocs,
 } from "firebase/firestore";
 import { useNavigate } from "@remix-run/react";
-import ImageUpload from "./ImageUpload";
+import ImageManagement from "./ImageManagement";
 import { getDynamicFields, validateFieldValue, convertFieldValue } from "~/services/dynamicFields";
 
 interface FungiFormProps {
@@ -61,6 +61,8 @@ const FungiForm: React.FC<FungiFormProps> = ({ fungi, onSave, onCancel }) => {
     region: "",
     collectorIds: [],
     images: [],
+    thumbnailUrl: undefined,
+    imageOrder: undefined,
     createdAt: new Date(),
     updatedAt: new Date(),
   });
@@ -113,8 +115,25 @@ const FungiForm: React.FC<FungiFormProps> = ({ fungi, onSave, onCancel }) => {
     }));
   };
 
-  const handleImagesChange = (selectedImages: File[]) => {
-    setImages(selectedImages);
+  const handleImagesChange = (imageUrls: string[]) => {
+    setFormData((prev) => ({
+      ...prev,
+      images: imageUrls,
+    }));
+  };
+
+  const handleThumbnailChange = (thumbnailUrl: string) => {
+    setFormData((prev) => ({
+      ...prev,
+      thumbnailUrl: thumbnailUrl || undefined,
+    }));
+  };
+
+  const handleImageOrderChange = (newOrder: number[]) => {
+    setFormData((prev) => ({
+      ...prev,
+      imageOrder: newOrder,
+    }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -137,7 +156,6 @@ const FungiForm: React.FC<FungiFormProps> = ({ fungi, onSave, onCancel }) => {
       const cleanFormData = Object.fromEntries(
         Object.entries({
           ...formData,
-          images: fungi ? fungi.images : [], // Keep existing images for now
           updatedAt: new Date(),
         }).filter(([key, value]) => value !== undefined)
       );
@@ -816,9 +834,14 @@ const FungiForm: React.FC<FungiFormProps> = ({ fungi, onSave, onCancel }) => {
         {/* Images Section */}
         <div className="bg-white p-6 rounded-lg shadow">
           <h3 className="text-lg font-semibold text-gray-900 mb-4">Imágenes</h3>
-          <ImageUpload
+          <ImageManagement
+            codigoFungario={formData.codigoFungario}
+            existingImages={formData.images || []}
+            selectedThumbnail={formData.thumbnailUrl}
+            imageOrder={formData.imageOrder}
             onImagesChange={handleImagesChange}
-            existingImages={images}
+            onThumbnailChange={handleThumbnailChange}
+            onImageOrderChange={handleImageOrderChange}
           />
         </div>
 
