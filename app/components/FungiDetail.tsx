@@ -1,5 +1,6 @@
-import React, { useState } from "react";
-import { Fungi, Collector } from "~/types";
+import React, { useState, useEffect } from "react";
+import { Fungi, Collector, FungiField, FungiWithDynamicFields } from "~/types";
+import { getDynamicFields } from "~/services/dynamicFields";
 
 interface LazyImageProps {
   src: string;
@@ -46,7 +47,7 @@ const LazyImage: React.FC<LazyImageProps> = ({ src, alt, className = "" }) => {
 };
 
 interface FungiDetailProps {
-  fungi: Fungi;
+  fungi: FungiWithDynamicFields;
   collectors?: Collector[];
 }
 
@@ -54,6 +55,20 @@ const FungiDetail: React.FC<FungiDetailProps> = ({ fungi, collectors = [] }) => 
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [selectedImageIndex, setSelectedImageIndex] = useState<number>(0);
   const [modalImageLoading, setModalImageLoading] = useState<boolean>(false);
+  const [dynamicFields, setDynamicFields] = useState<FungiField[]>([]);
+
+  useEffect(() => {
+    loadDynamicFields();
+  }, []);
+
+  const loadDynamicFields = async () => {
+    try {
+      const fields = await getDynamicFields();
+      setDynamicFields(fields.filter(f => f.visible && fungi[f.key] !== undefined && fungi[f.key] !== null));
+    } catch (error) {
+      console.error('Error loading dynamic fields:', error);
+    }
+  };
 
   const formatValue = (value: any): string => {
     if (value === null || value === undefined) return "-";
@@ -336,6 +351,43 @@ const FungiDetail: React.FC<FungiDetailProps> = ({ fungi, collectors = [] }) => 
           <h2 className="text-xl font-semibold text-gray-900 mb-4">Notas</h2>
           <p className="text-gray-700 leading-relaxed">{fungi.notas}</p>
         </div>
+      )}
+
+      {/* Dynamic Fields */}
+      {dynamicFields.length > 0 && (
+        <>
+          {Object.entries(
+            dynamicFields.reduce((acc, field) => {
+              const category = field.category || 'Información Adicional';
+              if (!acc[category]) acc[category] = [];
+              acc[category].push(field);
+              return acc;
+            }, {} as Record<string, FungiField[]>)
+          ).map(([category, fields]) => (
+            <div key={category} className="mb-8">
+              <h2 className="text-xl font-semibold text-gray-900 mb-4">{category}</h2>
+              <div className="space-y-3">
+                {fields.map((field) => {
+                  const value = fungi[field.key];
+                  let displayValue = value;
+                  
+                  if (field.type === 'boolean') {
+                    displayValue = value ? 'Sí' : 'No';
+                  } else if (field.type === 'date' && value) {
+                    displayValue = new Date(value).toLocaleDateString('es-PE');
+                  }
+                  
+                  return (
+                    <div key={field.id}>
+                      <span className="font-medium text-gray-700">{field.label}:</span>
+                      <span className="ml-2 text-gray-900">{formatValue(displayValue)}</span>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          ))}
+        </>
       )}
 
       {/* Image Modal */}

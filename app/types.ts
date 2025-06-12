@@ -66,3 +66,44 @@ export type Collector = {
 };
 
 export type NewCollector = Omit<Collector, "id"> & { id?: string };
+
+// Dynamic field system for Fungi
+export type FieldType = 'string' | 'number' | 'boolean' | 'enum' | 'date';
+
+export type FieldCategory = 
+  | 'Información Taxonómica'
+  | 'Estado de Muestra'
+  | 'Información Ecológica' 
+  | 'Características Morfológicas'
+  | 'Medidas Físicas'
+  | 'Información de Recolección'
+  | 'Coordenadas'
+  | 'Información de Esporas'
+  | 'Procesamiento de ADN'
+  | 'Análisis Molecular'
+  | 'Control de Calidad'
+  | 'Notas de Investigación'
+  | 'Otros';
+
+export type FungiField = {
+  id: string;
+  key: string; // The field key in the Fungi object
+  label: string; // Display name
+  type: FieldType;
+  category: FieldCategory; // Required category to group fields
+  description?: string;
+  required?: boolean;
+  enumOptions?: string[]; // For enum type fields
+  min?: number; // For number type validation
+  max?: number; // For number type validation
+  placeholder?: string;
+  order: number; // Display order in forms/views
+  visible: boolean; // Show/hide in UI
+  createdAt: Date;
+  updatedAt: Date;
+};
+
+// Extended Fungi type that includes dynamic fields
+export type FungiWithDynamicFields = Fungi & {
+  [key: string]: any; // Allow any additional fields
+};

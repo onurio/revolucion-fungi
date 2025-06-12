@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Fungi, NewFungi, Collector } from "~/types";
+import { Fungi, NewFungi, Collector, FungiField, FungiWithDynamicFields } from "~/types";
 import { db } from "~/firebase.client";
 import {
   collection,
@@ -10,6 +10,7 @@ import {
 } from "firebase/firestore";
 import { useNavigate } from "@remix-run/react";
 import ImageUpload from "./ImageUpload";
+import { getDynamicFields, validateFieldValue, convertFieldValue } from "~/services/dynamicFields";
 
 interface FungiFormProps {
   fungi?: Fungi;
@@ -23,7 +24,8 @@ const FungiForm: React.FC<FungiFormProps> = ({ fungi, onSave, onCancel }) => {
   const [collectors, setCollectors] = useState<Collector[]>([]);
   const [images, setImages] = useState<File[]>([]);
 
-  const [formData, setFormData] = useState<NewFungi>({
+  const [dynamicFields, setDynamicFields] = useState<FungiField[]>([]);
+  const [formData, setFormData] = useState<FungiWithDynamicFields>({
     codigoFungario: "",
     genero: "",
     especie: "",
@@ -65,6 +67,7 @@ const FungiForm: React.FC<FungiFormProps> = ({ fungi, onSave, onCancel }) => {
 
   useEffect(() => {
     fetchCollectors();
+    fetchDynamicFields();
     if (fungi) {
       setFormData({
         ...fungi,
@@ -72,6 +75,15 @@ const FungiForm: React.FC<FungiFormProps> = ({ fungi, onSave, onCancel }) => {
       });
     }
   }, [fungi]);
+
+  const fetchDynamicFields = async () => {
+    try {
+      const fields = await getDynamicFields();
+      setDynamicFields(fields.filter(f => f.visible));
+    } catch (error) {
+      console.error("Error fetching dynamic fields:", error);
+    }
+  };
 
   const fetchCollectors = async () => {
     try {
@@ -94,7 +106,7 @@ const FungiForm: React.FC<FungiFormProps> = ({ fungi, onSave, onCancel }) => {
     }
   };
 
-  const handleInputChange = (field: keyof NewFungi, value: any) => {
+  const handleInputChange = (field: string, value: any) => {
     setFormData((prev) => ({
       ...prev,
       [field]: value,
@@ -108,6 +120,15 @@ const FungiForm: React.FC<FungiFormProps> = ({ fungi, onSave, onCancel }) => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
+
+    // Validate dynamic fields
+    for (const field of dynamicFields) {
+      if (!validateFieldValue(field, formData[field.key])) {
+        alert(`Invalid value for ${field.label}`);
+        setLoading(false);
+        return;
+      }
+    }
 
     try {
       const fungiCollection = collection(db, "fungi");
@@ -698,6 +719,99 @@ const FungiForm: React.FC<FungiFormProps> = ({ fungi, onSave, onCancel }) => {
             placeholder="Notas adicionales sobre el hongo..."
           />
         </div>
+
+        {/* Dynamic Fields Sections */}
+        {dynamicFields.length > 0 && (
+          <>
+            {/* Group fields by category */}
+            {Object.entries(
+              dynamicFields.reduce((acc, field) => {
+                const category = field.category || 'Otros';
+                if (!acc[category]) acc[category] = [];
+                acc[category].push(field);
+                return acc;
+              }, {} as Record<string, FungiField[]>)
+            ).map(([category, fields]) => (
+              <div key={category} className="bg-white p-6 rounded-lg shadow">
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                  {category}
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {fields.map((field) => (
+                    <div key={field.id}>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        {field.label}
+                        {field.required && <span className="text-red-500 ml-1">*</span>}
+                      </label>
+                      {field.type === 'string' && (
+                        <input
+                          type="text"
+                          value={formData[field.key] || ''}
+                          onChange={(e) => handleInputChange(field.key, e.target.value)}
+                          placeholder={field.placeholder}
+                          required={field.required}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                        />
+                      )}
+                      {field.type === 'number' && (
+                        <input
+                          type="number"
+                          value={formData[field.key] || ''}
+                          onChange={(e) => handleInputChange(field.key, e.target.value ? Number(e.target.value) : null)}
+                          min={field.min}
+                          max={field.max}
+                          required={field.required}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                        />
+                      )}
+                      {field.type === 'boolean' && (
+                        <div className="flex items-center mt-2">
+                          <input
+                            type="checkbox"
+                            id={field.key}
+                            checked={formData[field.key] || false}
+                            onChange={(e) => handleInputChange(field.key, e.target.checked)}
+                            className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                          />
+                          <label htmlFor={field.key} className="ml-2 text-sm text-gray-700">
+                            {field.description || 'Sí'}
+                          </label>
+                        </div>
+                      )}
+                      {field.type === 'enum' && (
+                        <select
+                          value={formData[field.key] || ''}
+                          onChange={(e) => handleInputChange(field.key, e.target.value)}
+                          required={field.required}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                        >
+                          <option value="">Seleccionar...</option>
+                          {field.enumOptions?.map((option) => (
+                            <option key={option} value={option}>
+                              {option}
+                            </option>
+                          ))}
+                        </select>
+                      )}
+                      {field.type === 'date' && (
+                        <input
+                          type="date"
+                          value={formData[field.key] ? new Date(formData[field.key]).toISOString().split('T')[0] : ''}
+                          onChange={(e) => handleInputChange(field.key, e.target.value ? new Date(e.target.value) : null)}
+                          required={field.required}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                        />
+                      )}
+                      {field.description && (
+                        <p className="text-xs text-gray-500 mt-1">{field.description}</p>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </>
+        )}
 
         {/* Images Section */}
         <div className="bg-white p-6 rounded-lg shadow">
