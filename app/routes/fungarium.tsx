@@ -3,6 +3,7 @@ import { Link, useSearchParams } from "@remix-run/react";
 import { db } from "~/firebase.client";
 import { collection, getDocs, query, where, orderBy, limit } from "firebase/firestore";
 import { Fungi } from "~/types";
+import { useUser } from "~/contexts/UserContext.client";
 
 interface LazyImageProps {
   src: string;
@@ -53,10 +54,19 @@ export default function FungariumPage() {
   const [loading, setLoading] = useState(true);
   const [itemsPerPage] = useState(12); // Grid layout works better with 12 (3x4 or 4x3)
   const [searchParams, setSearchParams] = useSearchParams();
+  const { user } = useUser();
   
   // Get values from URL search params
   const searchTerm = searchParams.get("search") || "";
   const currentPage = parseInt(searchParams.get("page") || "1", 10);
+  
+  // List of authorized admin emails
+  const AUTHORIZED_ADMINS = [
+    "omrinuri@gmail.com",
+    "micelio@revolucionfungi.com",
+  ];
+  
+  const isAdmin = user && AUTHORIZED_ADMINS.includes(user.email || "");
 
   useEffect(() => {
     const fetchFungi = async () => {
@@ -152,9 +162,23 @@ export default function FungariumPage() {
     <div className="min-h-screen bg-gray-100 py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-4">
-            Fungarium Revolución Fungi
-          </h1>
+          <div className="flex justify-between items-start mb-4">
+            <h1 className="text-3xl font-bold text-gray-900">
+              Fungarium Revolución Fungi
+            </h1>
+            {isAdmin && (
+              <Link
+                to="/admin"
+                className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+              >
+                <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+                Ir Al Admin
+              </Link>
+            )}
+          </div>
           <p className="text-gray-600 mb-6">
             Catálogo de hongos encontrados en Perú
           </p>
