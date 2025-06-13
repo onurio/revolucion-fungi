@@ -266,8 +266,13 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
               <button
-                onClick={() => setIsSidebarOpen(true)}
-                className={`text-gray-500 hover:text-gray-700 ${isFullscreen ? "block" : "lg:hidden"}`}
+                onClick={() => {
+                  setIsSidebarOpen(true);
+                  if (isFullscreen) {
+                    setIsFullscreen(false);
+                  }
+                }}
+                className={`text-gray-500 hover:text-gray-700 ${isFullscreen ? "lg:block" : "lg:hidden"}`}
               >
                 <svg
                   className="w-6 h-6"
