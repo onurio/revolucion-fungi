@@ -1,11 +1,83 @@
 import React, { useEffect, useState } from "react";
 import { Fungi } from "~/types";
+import { Himenio, Habito, NativaExotica, SustratoTipo } from "~/types/fungi-enums";
 import { useNavigate } from "@remix-run/react";
 import { db } from "~/firebase.client";
 import { collection, getDocs, orderBy, query } from "firebase/firestore";
 import BulkEditModal from "./BulkEditModal";
+import EnumFilters from "./EnumFilters";
 
-const Listings: React.FC = () => {
+interface ListingsProps {
+  mode?: 'dashboard' | 'full';
+  showAllColumns?: boolean;
+  title?: string;
+}
+
+// Helper functions for emoji display
+const getHimenioEmoji = (value: string | null | undefined): string => {
+  if (!value) return "";
+  switch (value) {
+    case Himenio.APOTECIO: return "🥣";
+    case Himenio.ARRUGADO: return "🌊";
+    case Himenio.CORAL: return "🪸";
+    case Himenio.CORALOIDE: return "🪸";
+    case Himenio.DIENTES: return "🦷";
+    case Himenio.ESTROMA_CON_PERITECIOS: return "⚫";
+    case Himenio.ESTROMA_REDONDA: return "⭕";
+    case Himenio.GASTEROIDE: return "🎈";
+    case Himenio.GELATINOSO: return "🟦";
+    case Himenio.LAMINILLAS: return "📄";
+    case Himenio.LAMINAS: return "📋";
+    case Himenio.MASA_INTERNA_ESPORAS: return "🔵";
+    case Himenio.MASA_LIQUIDA_ESPORAS: return "💧";
+    case Himenio.NIDO: return "🪺";
+    case Himenio.POROS: return "🧽";
+    case Himenio.POROS_MICROSCOPICOS: return "🔍";
+    default: return "";
+  }
+};
+
+const getHabitoEmoji = (value: string | null | undefined): string => {
+  if (!value) return "";
+  switch (value) {
+    case Habito.SOLITARIO: return "🍄";
+    case Habito.GREGARIO: return "🍄🍄";
+    case Habito.CESPITOSO: return "🍄🍄🍄";
+    default: return "🍄";
+  }
+};
+
+const getSustratoTipoEmoji = (value: string | null | undefined): string => {
+  if (!value) return "";
+  switch (value) {
+    case SustratoTipo.PASTO: return "🌱";
+    case SustratoTipo.PINOCHA: return "🌲";
+    case SustratoTipo.HOJARASCA: return "🍂";
+    case SustratoTipo.MADERA_MUERTA: return "🪵";
+    case SustratoTipo.MADERA_VIVA: return "🌳";
+    case SustratoTipo.MUSGO: return "🌿";
+    case SustratoTipo.ARENA: return "🏖️";
+    case SustratoTipo.ESTIERCOL: return "💩";
+    case SustratoTipo.EN_ANIMAL_PARASITO: return "🐛";
+    case SustratoTipo.OTRO: return "❓";
+    default: return "";
+  }
+};
+
+const getNativaExoticaEmoji = (value: string | null | undefined): string => {
+  if (!value) return "";
+  switch (value) {
+    case NativaExotica.NATIVA: return "🌿";
+    case NativaExotica.EXOTICA: return "🌍";
+    default: return "";
+  }
+};
+
+const Listings: React.FC<ListingsProps> = ({ 
+  mode = 'dashboard', 
+  showAllColumns = false,
+  title = "Lista de Hongos"
+}) => {
   const [fungi, setFungi] = useState<Fungi[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
@@ -14,7 +86,32 @@ const Listings: React.FC = () => {
   const [selectedFungi, setSelectedFungi] = useState<Set<string>>(new Set());
   const [showBulkActions, setShowBulkActions] = useState(false);
   const [showBulkEditModal, setShowBulkEditModal] = useState(false);
+  const [filters, setFilters] = useState({
+    himenio: '',
+    habito: '',
+    nativaExotica: '',
+    sustratoTipo: '',
+    adnExtraido: '',
+    muestraConservada: '',
+    anillo: '',
+    volva: ''
+  });
   const navigate = useNavigate();
+
+  const formatValue = (value: any): string => {
+    if (value === null || value === undefined) return "-";
+    if (typeof value === "boolean") return value ? "Sí" : "No";
+    if (value instanceof Date) return value.toLocaleDateString();
+    if (typeof value === "number") return value.toString();
+    return value.toString();
+  };
+
+  const formatEnum = (value: string | null | undefined, getEmoji: (v: string | null | undefined) => string): string => {
+    if (!value) return "-";
+    const emoji = getEmoji(value);
+    const formatted = value.replace(/_/g, ' ').toLowerCase().replace(/\b\w/g, l => l.toUpperCase());
+    return `${emoji} ${formatted}`;
+  };
 
   const fetchFungi = async () => {
     try {
@@ -50,6 +147,33 @@ const Listings: React.FC = () => {
     fetchFungi();
   }, []);
 
+  // Log all fungi when the data changes
+  useEffect(() => {
+    if (fungi.length > 0) {
+      console.log("=== FUNGI ENUM CANDIDATES ===");
+      console.log(`Total fungi count: ${fungi.length}`);
+      
+      // Extract and log only the fields we want to convert to enums
+      const enumFields = fungi.map((f, index) => ({
+        index: index + 1,
+        codigo: f.codigoFungario,
+        himenio: f.himenio || 'null',
+        habito: f.habito || 'null',
+        nativaExotica: f.nativaExotica || 'null'
+      }));
+      
+      console.table(enumFields);
+      
+      // Also show unique values for each field
+      console.log("\n=== UNIQUE VALUES ===");
+      console.log("Himenio:", [...new Set(fungi.map(f => f.himenio).filter(Boolean))].sort());
+      console.log("Habito:", [...new Set(fungi.map(f => f.habito).filter(Boolean))].sort());
+      console.log("NativaExotica:", [...new Set(fungi.map(f => f.nativaExotica).filter(Boolean))].sort());
+      console.log("Sustrato:", [...new Set(fungi.map(f => f.sustrato).filter(Boolean))].sort());
+      console.log("=== END ENUM CANDIDATES ===");
+    }
+  }, [fungi]);
+
   const handleView = (codigoFungario: string) => {
     navigate(`/fungi/${codigoFungario}`);
   };
@@ -58,17 +182,33 @@ const Listings: React.FC = () => {
     navigate(`/edit/${id}`);
   };
 
-  const filteredFungi = fungi.filter(f => 
-    f.codigoFungario.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    f.genero.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    (f.especie && f.especie.toLowerCase().includes(searchTerm.toLowerCase())) ||
-    (f.lugar && f.lugar.toLowerCase().includes(searchTerm.toLowerCase()))
-  );
+  const filteredFungi = fungi.filter(f => {
+    // Text search filter
+    const matchesSearch = f.codigoFungario.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      f.genero.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (f.especie && f.especie.toLowerCase().includes(searchTerm.toLowerCase())) ||
+      (f.lugar && f.lugar.toLowerCase().includes(searchTerm.toLowerCase()));
 
-  // Reset to page 1 when search term or items per page changes
+    // Enum filters
+    const matchesHimenio = !filters.himenio || f.himenio === filters.himenio;
+    const matchesHabito = !filters.habito || f.habito === filters.habito;
+    const matchesNativaExotica = !filters.nativaExotica || f.nativaExotica === filters.nativaExotica;
+    const matchesSustratoTipo = !filters.sustratoTipo || f.sustratoTipo === filters.sustratoTipo;
+
+    // Boolean filters
+    const matchesAdnExtraido = !filters.adnExtraido || f.adnExtraido === (filters.adnExtraido === 'true');
+    const matchesMuestraConservada = !filters.muestraConservada || f.muestraConservada === (filters.muestraConservada === 'true');
+    const matchesAnillo = !filters.anillo || f.anillo === (filters.anillo === 'true');
+    const matchesVolva = !filters.volva || f.volva === (filters.volva === 'true');
+
+    return matchesSearch && matchesHimenio && matchesHabito && matchesNativaExotica && matchesSustratoTipo && 
+           matchesAdnExtraido && matchesMuestraConservada && matchesAnillo && matchesVolva;
+  });
+
+  // Reset to page 1 when search term, filters, or items per page changes
   React.useEffect(() => {
     setCurrentPage(1);
-  }, [searchTerm, itemsPerPage]);
+  }, [searchTerm, itemsPerPage, filters]);
 
   // Pagination calculations
   const totalPages = Math.ceil(filteredFungi.length / itemsPerPage);
@@ -130,6 +270,13 @@ const Listings: React.FC = () => {
     setCurrentPage(page);
   };
 
+  const handleFilterChange = (filterType: string, value: string) => {
+    setFilters(prev => ({
+      ...prev,
+      [filterType]: value
+    }));
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center p-8">
@@ -159,6 +306,15 @@ const Listings: React.FC = () => {
             Nuevo Registro
           </button>
         </div>
+      </div>
+
+      {/* Filters */}
+      <div className="bg-white p-4 rounded-lg shadow">
+        <EnumFilters
+          filters={filters}
+          onFilterChange={handleFilterChange}
+          showAdvanced={mode === 'full'}
+        />
       </div>
 
       {/* Results Count and Pagination Controls */}
@@ -293,6 +449,25 @@ const Listings: React.FC = () => {
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Género / Especie
                   </th>
+                  {(mode === 'full' || showAllColumns) && (
+                    <>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Tipo Sustrato
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Sustrato
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Hábito
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Himenio
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Nativa/Exótica
+                      </th>
+                    </>
+                  )}
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Lugar
                   </th>
@@ -306,7 +481,7 @@ const Listings: React.FC = () => {
                     Imágenes
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Acciones
+                    Ver
                   </th>
                 </tr>
               </thead>
@@ -322,9 +497,12 @@ const Listings: React.FC = () => {
                       />
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm font-medium text-gray-900">
+                      <button
+                        onClick={() => handleEdit(fungus.id)}
+                        className="text-sm font-medium text-blue-600 hover:text-blue-800 underline"
+                      >
                         {fungus.codigoFungario}
-                      </div>
+                      </button>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="text-sm text-gray-900">
@@ -332,6 +510,35 @@ const Listings: React.FC = () => {
                         {fungus.especie && <span className="italic"> {fungus.especie}</span>}
                       </div>
                     </td>
+                    {(mode === 'full' || showAllColumns) && (
+                      <>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="text-sm text-gray-900">
+                            {formatEnum(fungus.sustratoTipo, getSustratoTipoEmoji)}
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 text-sm text-gray-900 max-w-xs truncate">
+                          <span title={formatValue(fungus.sustrato)}>
+                            {formatValue(fungus.sustrato)}
+                          </span>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="text-sm text-gray-900">
+                            {formatEnum(fungus.habito, getHabitoEmoji)}
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="text-sm text-gray-900">
+                            {formatEnum(fungus.himenio, getHimenioEmoji)}
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="text-sm text-gray-900">
+                            {formatEnum(fungus.nativaExotica, getNativaExoticaEmoji)}
+                          </div>
+                        </td>
+                      </>
+                    )}
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="text-sm text-gray-500">
                         {fungus.lugar || '-'}
@@ -359,20 +566,16 @@ const Listings: React.FC = () => {
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                      <div className="flex space-x-2">
-                        <button
-                          onClick={() => handleView(fungus.codigoFungario)}
-                          className="text-blue-600 hover:text-blue-900"
-                        >
-                          Ver
-                        </button>
-                        <button
-                          onClick={() => handleEdit(fungus.id)}
-                          className="text-indigo-600 hover:text-indigo-900"
-                        >
-                          Editar
-                        </button>
-                      </div>
+                      <button
+                        onClick={() => handleView(fungus.codigoFungario)}
+                        className="text-blue-600 hover:text-blue-900 p-1"
+                        title="Ver en fungarium público"
+                      >
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                        </svg>
+                      </button>
                     </td>
                   </tr>
                 ))}

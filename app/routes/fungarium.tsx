@@ -4,6 +4,7 @@ import { db } from "~/firebase.client";
 import { collection, getDocs, query, where, orderBy, limit } from "firebase/firestore";
 import { Fungi } from "~/types";
 import { useUser } from "~/contexts/UserContext.client";
+import EnumFilters from "~/components/EnumFilters";
 
 interface LazyImageProps {
   src: string;
@@ -59,6 +60,16 @@ export default function FungariumPage() {
   // Get values from URL search params
   const searchTerm = searchParams.get("search") || "";
   const currentPage = parseInt(searchParams.get("page") || "1", 10);
+  const [filters, setFilters] = useState({
+    himenio: searchParams.get("himenio") || '',
+    habito: searchParams.get("habito") || '',
+    nativaExotica: searchParams.get("nativaExotica") || '',
+    sustratoTipo: searchParams.get("sustratoTipo") || '',
+    adnExtraido: searchParams.get("adnExtraido") || '',
+    muestraConservada: searchParams.get("muestraConservada") || '',
+    anillo: searchParams.get("anillo") || '',
+    volva: searchParams.get("volva") || ''
+  });
   
   // List of authorized admin emails
   const AUTHORIZED_ADMINS = [
@@ -94,28 +105,39 @@ export default function FungariumPage() {
     fetchFungi();
   }, []);
 
-  const filteredFungi = fungi.filter(f => 
-    f.codigoFungario.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    f.genero.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    (f.especie && f.especie.toLowerCase().includes(searchTerm.toLowerCase())) ||
-    (f.lugar && f.lugar.toLowerCase().includes(searchTerm.toLowerCase()))
-  );
+  const filteredFungi = fungi.filter(f => {
+    // Text search filter
+    const matchesSearch = f.codigoFungario.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      f.genero.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (f.especie && f.especie.toLowerCase().includes(searchTerm.toLowerCase())) ||
+      (f.lugar && f.lugar.toLowerCase().includes(searchTerm.toLowerCase()));
 
-  // Reset to page 1 when search term changes
+    // Enum filters
+    const matchesHimenio = !filters.himenio || f.himenio === filters.himenio;
+    const matchesHabito = !filters.habito || f.habito === filters.habito;
+    const matchesNativaExotica = !filters.nativaExotica || f.nativaExotica === filters.nativaExotica;
+    const matchesSustratoTipo = !filters.sustratoTipo || f.sustratoTipo === filters.sustratoTipo;
+
+    // Boolean filters
+    const matchesAdnExtraido = !filters.adnExtraido || f.adnExtraido === (filters.adnExtraido === 'true');
+    const matchesMuestraConservada = !filters.muestraConservada || f.muestraConservada === (filters.muestraConservada === 'true');
+    const matchesAnillo = !filters.anillo || f.anillo === (filters.anillo === 'true');
+    const matchesVolva = !filters.volva || f.volva === (filters.volva === 'true');
+
+    return matchesSearch && matchesHimenio && matchesHabito && matchesNativaExotica && matchesSustratoTipo && 
+           matchesAdnExtraido && matchesMuestraConservada && matchesAnillo && matchesVolva;
+  });
+
+  // Reset to page 1 when search term or filters change
   React.useEffect(() => {
-    if (searchTerm && currentPage !== 1) {
+    if ((searchTerm || Object.values(filters).some(f => f)) && currentPage !== 1) {
       setSearchParams(prev => {
         const newParams = new URLSearchParams(prev);
         newParams.set("page", "1");
-        if (searchTerm) {
-          newParams.set("search", searchTerm);
-        } else {
-          newParams.delete("search");
-        }
         return newParams;
       });
     }
-  }, [searchTerm, currentPage, setSearchParams]);
+  }, [searchTerm, filters, currentPage, setSearchParams]);
 
   // Pagination calculations
   const totalPages = Math.ceil(filteredFungi.length / itemsPerPage);
@@ -143,6 +165,24 @@ export default function FungariumPage() {
         newParams.delete("search");
         newParams.set("page", "1");
       }
+      return newParams;
+    });
+  };
+
+  const handleFilterChange = (filterType: string, value: string) => {
+    setFilters(prev => ({
+      ...prev,
+      [filterType]: value
+    }));
+    
+    setSearchParams(prev => {
+      const newParams = new URLSearchParams(prev);
+      if (value) {
+        newParams.set(filterType, value);
+      } else {
+        newParams.delete(filterType);
+      }
+      newParams.set("page", "1"); // Reset to page 1 on filter change
       return newParams;
     });
   };
@@ -193,6 +233,15 @@ export default function FungariumPage() {
               className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
             />
           </div>
+        </div>
+
+        {/* Filters */}
+        <div className="bg-white p-4 rounded-lg shadow">
+          <EnumFilters
+            filters={filters}
+            onFilterChange={handleFilterChange}
+            showAdvanced={false}
+          />
         </div>
 
         {/* Results Count */}

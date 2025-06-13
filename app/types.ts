@@ -1,3 +1,5 @@
+import { Himenio, Habito, NativaExotica, SustratoTipo } from './types/fungi-enums';
+
 export type Registry = {
   id: string;
   images: File[];
@@ -18,14 +20,15 @@ export type Fungi = {
   numeroExtractoAdn?: string;
   pcr?: string;
   sustrato?: string;
+  sustratoTipo?: SustratoTipo | null;
   arbolAsociado?: string;
-  nativaExotica?: string;
-  habito?: string;
+  nativaExotica?: NativaExotica | null;
+  habito?: Habito | null;
   numeroCarpoforos?: number;
   olor?: string;
   sporeprint?: string;
   esporadaColor?: string;
-  himenio?: string;
+  himenio?: Himenio | null;
   anillo: boolean;
   volva: boolean;
   textura?: string;

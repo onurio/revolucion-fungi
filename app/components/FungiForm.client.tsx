@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Fungi, NewFungi, Collector, FungiField, FungiWithDynamicFields } from "~/types";
+import { Himenio, Habito, NativaExotica, SustratoTipo } from "~/types/fungi-enums";
 import { db } from "~/firebase.client";
 import {
   collection,
@@ -34,6 +35,7 @@ const FungiForm: React.FC<FungiFormProps> = ({ fungi, onSave, onCancel }) => {
     numeroExtractoAdn: "",
     pcr: "",
     sustrato: "",
+    sustratoTipo: "",
     arbolAsociado: "",
     nativaExotica: "",
     habito: "",
@@ -313,13 +315,36 @@ const FungiForm: React.FC<FungiFormProps> = ({ fungi, onSave, onCancel }) => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Sustrato
+                Tipo de Sustrato
+              </label>
+              <select
+                value={formData.sustratoTipo || ""}
+                onChange={(e) => handleInputChange("sustratoTipo", e.target.value as SustratoTipo || null)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+              >
+                <option value="">Seleccionar...</option>
+                <option value={SustratoTipo.PASTO}>🌱 Pasto</option>
+                <option value={SustratoTipo.PINOCHA}>🌲 Pinocha (Pinos)</option>
+                <option value={SustratoTipo.HOJARASCA}>🍂 Hojarasca</option>
+                <option value={SustratoTipo.MADERA_MUERTA}>🪵 Madera muerta</option>
+                <option value={SustratoTipo.MADERA_VIVA}>🌳 Madera viva</option>
+                <option value={SustratoTipo.MUSGO}>🌿 Musgo</option>
+                <option value={SustratoTipo.ARENA}>🏖️ Arena</option>
+                <option value={SustratoTipo.ESTIERCOL}>💩 Estiércol</option>
+                <option value={SustratoTipo.EN_ANIMAL_PARASITO}>🐛 En animal (parásito)</option>
+                <option value={SustratoTipo.OTRO}>❓ Otro</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Descripción del Sustrato
               </label>
               <input
                 type="text"
                 value={formData.sustrato || ""}
                 onChange={(e) => handleInputChange("sustrato", e.target.value)}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                placeholder="Detalles específicos del sustrato..."
               />
             </div>
             <div>
@@ -342,25 +367,35 @@ const FungiForm: React.FC<FungiFormProps> = ({ fungi, onSave, onCancel }) => {
               <select
                 value={formData.nativaExotica || ""}
                 onChange={(e) =>
-                  handleInputChange("nativaExotica", e.target.value)
+                  handleInputChange("nativaExotica", e.target.value as NativaExotica || null)
                 }
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
               >
                 <option value="">Seleccionar...</option>
-                <option value="Nativa">Nativa</option>
-                <option value="Exótica">Exótica</option>
+                <option value={NativaExotica.NATIVA}>🌿 Nativa</option>
+                <option value={NativaExotica.EXOTICA}>🌍 Exótica</option>
               </select>
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Hábito
               </label>
-              <input
-                type="text"
+              <select
                 value={formData.habito || ""}
-                onChange={(e) => handleInputChange("habito", e.target.value)}
+                onChange={(e) => handleInputChange("habito", e.target.value as Habito || null)}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
-              />
+              >
+                <option value="">Seleccionar...</option>
+                <option value={Habito.SOLITARIO}>🍄 Solitario</option>
+                <option value={Habito.GREGARIO}>🍄🍄 Gregario</option>
+                <option value={Habito.CESPITOSO}>🍄🍄🍄 Cespitoso</option>
+                <option value={Habito.SOLITARIO_GREGARIO}>🍄/🍄🍄 Solitario/Gregario</option>
+                <option value={Habito.SOLITARIO_CESPITOSO}>🍄🍄🍄 Solitario, Cespitoso</option>
+                <option value={Habito.SOLITARIO_DISPERSO}>🍄💨 Solitario, Disperso</option>
+                <option value={Habito.GREGARIO_CESPITOSO}>🍄🍄🍄 Gregario, Cespitoso</option>
+                <option value={Habito.GREGARIO_DISPERSO}>🍄🍄💨 Gregario, Disperso</option>
+                <option value={Habito.GREGARIO_CESPITOSO_DISPERSO}>🍄🍄🍄💨 Gregario, Cespitoso y Disperso</option>
+              </select>
             </div>
           </div>
         </div>
@@ -402,12 +437,29 @@ const FungiForm: React.FC<FungiFormProps> = ({ fungi, onSave, onCancel }) => {
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Himenio
               </label>
-              <input
-                type="text"
+              <select
                 value={formData.himenio || ""}
-                onChange={(e) => handleInputChange("himenio", e.target.value)}
+                onChange={(e) => handleInputChange("himenio", e.target.value as Himenio || null)}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
-              />
+              >
+                <option value="">Seleccionar...</option>
+                <option value={Himenio.APOTECIO}>🥣 Apotecio</option>
+                <option value={Himenio.ARRUGADO}>🌊 Arrugado</option>
+                <option value={Himenio.CORAL}>🪸 Coral</option>
+                <option value={Himenio.CORALOIDE}>🪸 Coraloide</option>
+                <option value={Himenio.DIENTES}>🦷 Dientes</option>
+                <option value={Himenio.ESTROMA_CON_PERITECIOS}>⚫ Estroma con peritecios</option>
+                <option value={Himenio.ESTROMA_REDONDA}>⭕ Estroma redonda</option>
+                <option value={Himenio.GASTEROIDE}>🎈 Gasteroide</option>
+                <option value={Himenio.GELATINOSO}>🟦 Gelatinoso</option>
+                <option value={Himenio.LAMINILLAS}>📄 Laminillas</option>
+                <option value={Himenio.LAMINAS}>📋 Láminas</option>
+                <option value={Himenio.MASA_INTERNA_ESPORAS}>🔵 Masa interna de esporas</option>
+                <option value={Himenio.MASA_LIQUIDA_ESPORAS}>💧 Masa líquida de esporas</option>
+                <option value={Himenio.NIDO}>🪺 Nido</option>
+                <option value={Himenio.POROS}>🧽 Poros</option>
+                <option value={Himenio.POROS_MICROSCOPICOS}>🔍 Poros (microscópicos)</option>
+              </select>
             </div>
             <div className="flex items-center">
               <input

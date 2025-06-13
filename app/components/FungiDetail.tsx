@@ -1,9 +1,76 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { Link } from "@remix-run/react";
 import { Fungi, Collector, FungiField, FungiWithDynamicFields } from "~/types";
+import { Himenio, Habito, NativaExotica, SustratoTipo } from "~/types/fungi-enums";
 import { getDynamicFields } from "~/services/dynamicFields";
 import { useUser } from "~/contexts/UserContext.client";
 import { checkAdminStatus } from "~/utils/admin.client";
+
+// Helper functions to get emojis for enum values
+const getHimenioEmoji = (value: string | null | undefined): string => {
+  if (!value) return "";
+  switch (value) {
+    case Himenio.APOTECIO: return "🥣";
+    case Himenio.ARRUGADO: return "🌊";
+    case Himenio.CORAL: return "🪸";
+    case Himenio.CORALOIDE: return "🪸";
+    case Himenio.DIENTES: return "🦷";
+    case Himenio.ESTROMA_CON_PERITECIOS: return "⚫";
+    case Himenio.ESTROMA_REDONDA: return "⭕";
+    case Himenio.GASTEROIDE: return "🎈";
+    case Himenio.GELATINOSO: return "🟦";
+    case Himenio.LAMINILLAS: return "📄";
+    case Himenio.LAMINAS: return "📋";
+    case Himenio.MASA_INTERNA_ESPORAS: return "🔵";
+    case Himenio.MASA_LIQUIDA_ESPORAS: return "💧";
+    case Himenio.NIDO: return "🪺";
+    case Himenio.POROS: return "🧽";
+    case Himenio.POROS_MICROSCOPICOS: return "🔍";
+    default: return "";
+  }
+};
+
+const getHabitoEmoji = (value: string | null | undefined): string => {
+  if (!value) return "";
+  switch (value) {
+    case Habito.SOLITARIO: return "🍄";
+    case Habito.GREGARIO: return "🍄🍄";
+    case Habito.CESPITOSO: return "🍄🍄🍄";
+    case Habito.SOLITARIO_GREGARIO: return "🍄/🍄🍄";
+    case Habito.SOLITARIO_CESPITOSO: return "🍄🍄🍄";
+    case Habito.SOLITARIO_DISPERSO: return "🍄💨";
+    case Habito.GREGARIO_CESPITOSO: return "🍄🍄🍄";
+    case Habito.GREGARIO_DISPERSO: return "🍄🍄💨";
+    case Habito.GREGARIO_CESPITOSO_DISPERSO: return "🍄🍄🍄💨";
+    default: return "";
+  }
+};
+
+const getNativaExoticaEmoji = (value: string | null | undefined): string => {
+  if (!value) return "";
+  switch (value) {
+    case NativaExotica.NATIVA: return "🌿";
+    case NativaExotica.EXOTICA: return "🌍";
+    default: return "";
+  }
+};
+
+const getSustratoTipoEmoji = (value: string | null | undefined): string => {
+  if (!value) return "";
+  switch (value) {
+    case SustratoTipo.PASTO: return "🌱";
+    case SustratoTipo.PINOCHA: return "🌲";
+    case SustratoTipo.HOJARASCA: return "🍂";
+    case SustratoTipo.MADERA_MUERTA: return "🪵";
+    case SustratoTipo.MADERA_VIVA: return "🌳";
+    case SustratoTipo.MUSGO: return "🌿";
+    case SustratoTipo.ARENA: return "🏖️";
+    case SustratoTipo.ESTIERCOL: return "💩";
+    case SustratoTipo.EN_ANIMAL_PARASITO: return "🐛";
+    case SustratoTipo.OTRO: return "❓";
+    default: return "";
+  }
+};
 
 interface LazyImageProps {
   src: string;
@@ -231,8 +298,16 @@ const FungiDetail: React.FC<FungiDetailProps> = ({ fungi, collectors = [] }) => 
             Información Ecológica
           </h2>
           <div className="space-y-3">
+            {fungi.sustratoTipo && (
+              <div>
+                <span className="font-medium text-gray-700">Tipo de Sustrato:</span>
+                <span className="ml-2 text-gray-900">
+                  {getSustratoTipoEmoji(fungi.sustratoTipo)} {fungi.sustratoTipo.replace(/_/g, ' ').toLowerCase().replace(/\b\w/g, l => l.toUpperCase())}
+                </span>
+              </div>
+            )}
             <div>
-              <span className="font-medium text-gray-700">Sustrato:</span>
+              <span className="font-medium text-gray-700">Descripción del Sustrato:</span>
               <span className="ml-2 text-gray-900">{formatValue(fungi.sustrato)}</span>
             </div>
             <div>
@@ -241,11 +316,15 @@ const FungiDetail: React.FC<FungiDetailProps> = ({ fungi, collectors = [] }) => 
             </div>
             <div>
               <span className="font-medium text-gray-700">Nativa/Exótica:</span>
-              <span className="ml-2 text-gray-900">{formatValue(fungi.nativaExotica)}</span>
+              <span className="ml-2 text-gray-900">
+                {getNativaExoticaEmoji(fungi.nativaExotica)} {formatValue(fungi.nativaExotica)}
+              </span>
             </div>
             <div>
               <span className="font-medium text-gray-700">Hábito:</span>
-              <span className="ml-2 text-gray-900">{formatValue(fungi.habito)}</span>
+              <span className="ml-2 text-gray-900">
+                {getHabitoEmoji(fungi.habito)} {formatValue(fungi.habito)}
+              </span>
             </div>
           </div>
         </div>
@@ -265,7 +344,9 @@ const FungiDetail: React.FC<FungiDetailProps> = ({ fungi, collectors = [] }) => 
             </div>
             <div>
               <span className="font-medium text-gray-700">Himenio:</span>
-              <span className="ml-2 text-gray-900">{formatValue(fungi.himenio)}</span>
+              <span className="ml-2 text-gray-900">
+                {getHimenioEmoji(fungi.himenio)} {formatValue(fungi.himenio)}
+              </span>
             </div>
             <div>
               <span className="font-medium text-gray-700">Anillo:</span>

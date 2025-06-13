@@ -14,6 +14,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
   const location = useLocation();
   const { user, loading } = useUser();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isFullscreen, setIsFullscreen] = useState(false);
 
   const handleLogout = async () => {
     await signOut(auth);
@@ -159,7 +160,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
       <div
         className={`bg-gray-900 text-white w-64 min-h-screen p-4 ${
           isSidebarOpen ? "block" : "hidden"
-        } lg:block fixed lg:relative z-30`}
+        } ${isFullscreen ? "hidden" : "lg:block"} fixed lg:relative z-30`}
       >
         <div className="flex items-center justify-between mb-8">
           <h2 className="text-xl font-bold">Fungarium Admin</h2>
@@ -185,7 +186,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
 
         {/* User Info */}
         <div className="mb-8 pb-4 border-b border-gray-700">
-          <div className="flex items-center space-x-3">
+          <div className="flex items-center space-x-3 mb-3">
             <div className="w-8 h-8 bg-gray-600 rounded-full flex items-center justify-center">
               <svg
                 className="w-5 h-5"
@@ -206,6 +207,27 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
               <p className="text-xs text-gray-400">Administrador</p>
             </div>
           </div>
+          
+          {/* Logout Button */}
+          <button
+            onClick={handleLogout}
+            className="w-full flex items-center space-x-3 px-3 py-2 rounded-md text-sm font-medium text-gray-300 hover:bg-red-600 hover:text-white transition-colors"
+          >
+            <svg
+              className="w-5 h-5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+              />
+            </svg>
+            <span>Cerrar Sesión</span>
+          </button>
         </div>
 
         {/* Navigation */}
@@ -227,28 +249,6 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
           ))}
         </nav>
 
-        {/* Logout Button */}
-        <div className="absolute bottom-4 left-4 right-4">
-          <button
-            onClick={handleLogout}
-            className="w-full flex items-center space-x-3 px-3 py-2 rounded-md text-sm font-medium text-gray-300 hover:bg-red-600 hover:text-white transition-colors"
-          >
-            <svg
-              className="w-5 h-5"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
-              />
-            </svg>
-            <span>Cerrar Sesión</span>
-          </button>
-        </div>
       </div>
 
       {/* Overlay for mobile */}
@@ -267,7 +267,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
             <div className="flex items-center space-x-4">
               <button
                 onClick={() => setIsSidebarOpen(true)}
-                className="lg:hidden text-gray-500 hover:text-gray-700"
+                className={`text-gray-500 hover:text-gray-700 ${isFullscreen ? "block" : "lg:hidden"}`}
               >
                 <svg
                   className="w-6 h-6"
@@ -288,8 +288,32 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
               </h1>
             </div>
 
-            <div className="text-sm text-gray-500">
-              Perú Fungarium Management System
+            <div className="flex items-center space-x-4">
+              <button
+                onClick={() => setIsFullscreen(!isFullscreen)}
+                className="hidden lg:flex items-center space-x-2 px-3 py-2 text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-md transition-colors"
+                title={isFullscreen ? "Mostrar sidebar" : "Pantalla completa"}
+              >
+                {isFullscreen ? (
+                  <>
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
+                    </svg>
+                    <span>Mostrar Sidebar</span>
+                  </>
+                ) : (
+                  <>
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
+                    </svg>
+                    <span>Pantalla Completa</span>
+                  </>
+                )}
+              </button>
+              
+              <div className="text-sm text-gray-500">
+                Perú Fungarium Management System
+              </div>
             </div>
           </div>
         </div>
