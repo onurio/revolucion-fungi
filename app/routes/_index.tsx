@@ -5,6 +5,7 @@ export const meta: MetaFunction = () => {
   return [
     { title: "Revolución Fungi - Fungarium Perú" },
     { name: "description", content: "Revolución Fungi: Documentando y conservando la diversidad fúngica del Perú" },
+    { rel: "icon", type: "image/x-icon", href: "/favicon.ico" },
     { property: "og:title", content: "Revolución Fungi - Fungarium Perú" },
     { property: "og:description", content: "Un movimiento que redefine nuestra relación con los hongos, integrándolos en la vida cotidiana del Perú" },
     { property: "og:image", content: "/hero-mushroom.jpg" },
