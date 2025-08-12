@@ -297,7 +297,7 @@ const Home: React.FC = () => {
               <span className="relative z-10">Explorar Fungarium</span>
             </Link>
             <a
-              href="mailto:info@revolucionfungi.org"
+              href="mailto:micelio@revolucionfungi.com"
               className="px-8 py-4 rounded-full border border-white/30 hover:bg-white/10 transition-all font-light"
             >
               Contáctanos
@@ -313,7 +313,7 @@ const Home: React.FC = () => {
             <p className="text-white/50 mb-4 md:mb-0">&copy; 2025 Revolución Fungi. Todos los derechos reservados.</p>
             <div className="flex space-x-6">
               <a href="https://www.instagram.com/revolucionfungi" target="_blank" rel="noopener noreferrer" className="text-white/50 hover:text-amber-400 transition-colors">Instagram</a>
-              <a href="mailto:info@revolucionfungi.org" className="text-white/50 hover:text-amber-400 transition-colors">Email</a>
+              <a href="mailto:micelio@revolucionfungi.com" className="text-white/50 hover:text-amber-400 transition-colors">Email</a>
             </div>
           </div>
         </div>
