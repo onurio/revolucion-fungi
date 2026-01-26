@@ -1,5 +1,13 @@
 {
   "projects": {
     "default": "fungarium-peru-a0638"
+  },
+  "targets": {
+    "fungarium-peru-a0638": {
+      "hosting": {
+        "main": ["revolucion-fungi"],
+        "festival": ["revolucionfungifest"]
+      }
+    }
   }
 }
