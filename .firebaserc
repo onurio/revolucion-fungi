@@ -5,8 +5,12 @@
   "targets": {
     "fungarium-peru-a0638": {
       "hosting": {
-        "main": ["revolucion-fungi"],
-        "festival": ["revolucionfungifest"]
+        "main": [
+          "fungarium-peru-a0638"
+        ],
+        "festival": [
+          "revolucionfungifest"
+        ]
       }
     }
   }

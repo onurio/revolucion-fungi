@@ -36,16 +36,8 @@
       "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
       "rewrites": [
         {
-          "source": "/",
-          "destination": "/landing/festival.html"
-        },
-        {
-          "source": "/festival",
-          "destination": "/landing/festival.html"
-        },
-        {
           "source": "**",
-          "destination": "/index.html"
+          "destination": "/landing/festival.html"
         }
       ],
       "headers": [
