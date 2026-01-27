@@ -73,11 +73,11 @@ const InfoSection: React.FC = () => {
               Revolución Fungi Fest - Oxapampa 2026 es el primer festival en la historia del Perú dedicado íntegramente al Reino Fungi que se realizará del 26 de febrero al 01 de marzo de 2026.
             </p>
 
-            <p className="text-base md:text-lg">
+            <p className="text-base md:text-lg text-justify">
               El Revolución Fungi Fest – Festival de los Hongos del Perú es un movimiento ciudadano enfocado en la ciencia, la cultura y la comunidad que reune destacados micólogos, artistas, científicos, representantes comunitarios, pueblos originarios, conservacionistas, emprendedores y entusiastas de los hongos para explorar todo lo relacionado al Reino Fungi. Más que un festival, somos un encuentro donde la comunidad fungi se reune para celebrar a los hongos y su impacto en el mundo. ¡Celebremos nuestro amor por los hongos!
             </p>
 
-            <p className="text-base md:text-lg">
+            <p className="text-base md:text-lg text-justify">
               Como festival sin fines de lucro, les pedimos cordialmente que consideren apoyar nuestras actividades, cuyo objetivo es mantener los costos para nuestros invitados y asistentes lo más accesibles posible. Cualquier donación marca la diferencia y nos ayuda a cubrir alojamiento y transporte para nuestros invitados que llegan desde otras partes del mundo, becas para nuestros colaboradores y nuestros programas comunitarios gratuitos. Si donar no es una opción, les pedimos que compartan información sobre RFF; todo apoyo importa.
             </p>
 
@@ -187,10 +187,10 @@ const ActividadesSection: React.FC = () => {
 
 const ContactSection: React.FC = () => {
   return (
-    <section id="entrada" className="bg-white py-16 mt-16" style={{ scrollMarginTop: 'var(--navbar-height)', maxHeight: 'var(--screen-height)' }}>
+    <section id="entrada" className="bg-white py-16 mt-16" style={{ scrollMarginTop: 'var(--navbar-height)' }}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
-          {/* Left side - Image */}
+          {/* Left side - Image (visible on desktop) */}
           <div className="hidden lg:block">
             <img
               src="/contact-bg.jpg"
@@ -214,7 +214,7 @@ const ContactSection: React.FC = () => {
             <div className="absolute inset-0 bg-black bg-opacity-40 rounded-lg lg:hidden"></div>
 
             <div className="relative z-10">
-              <h2 className="text-3xl font-bold mb-8" style={{ color: '#42c0e5' }}>ADQUIERE TU ENTRADA</h2>
+              <h2 className="text-3xl font-bold mb-8 text-white lg:text-[#42c0e5]">ADQUIERE TU ENTRADA</h2>
               <form id="contact-form" className="space-y-6">
               <div>
                 <input
@@ -245,7 +245,7 @@ const ContactSection: React.FC = () => {
                   required
                   className="w-20 px-2 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent bg-white text-sm"
                 >
-                  <option value="">+País</option>
+                  <option value="">+ País</option>
                   {countries.map((country, idx) => (
                     <option key={idx} value={country.code}>
                       {country.flag} {country.name} {country.code}
@@ -294,8 +294,8 @@ const Footer: React.FC = () => {
         <div className="flex flex-col md:flex-row justify-between items-center">
           <p className="text-gray-500 mb-4 md:mb-0">&copy; 2025 Revolución Fungi. Todos los derechos reservados.</p>
           <div className="flex space-x-6">
-            <a href="https://www.instagram.com/revolucionfungi" target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-orange-500 transition-colors">Instagram</a>
-            <a href="mailto:micelio@revolucionfungi.com" className="text-gray-500 hover:text-orange-500 transition-colors">Email</a>
+            <a href="https://www.instagram.com/revolucionfungifest" target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-orange-500 transition-colors">Instagram</a>
+            <a href="mailto:info@revolucionfungi.com" className="text-gray-500 hover:text-orange-500 transition-colors">Email</a>
             <a href="tel:+51920621682" className="text-gray-500 hover:text-orange-500 transition-colors">+51 920 621 682</a>
           </div>
         </div>

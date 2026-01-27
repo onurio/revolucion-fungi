@@ -314,6 +314,7 @@ const Home: React.FC = () => {
             <div className="flex space-x-6">
               <a href="https://www.instagram.com/revolucionfungi" target="_blank" rel="noopener noreferrer" className="text-white/50 hover:text-amber-400 transition-colors">Instagram</a>
               <a href="mailto:micelio@revolucionfungi.com" className="text-white/50 hover:text-amber-400 transition-colors">Email</a>
+              <a href="tel:+51920621682" className="text-white/50 hover:text-amber-400 transition-colors">+51 920 621 682</a>
             </div>
           </div>
         </div>

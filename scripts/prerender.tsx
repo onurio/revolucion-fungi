@@ -27,8 +27,8 @@ const pages: PageConfig[] = [
     path: 'festival.html',
     title: 'Revolución Fungi Fest Oxapampa 2026',
     description: 'El primer festival en la historia del Perú dedicado íntegramente al Reino Fungi. 26 de febrero al 01 de marzo de 2026 en Oxapampa.',
-    canonical: 'https://revolucionfungi.com/festival',
-    ogImage: '/hero-mushroom.jpg'
+    canonical: 'https://revolucionfungifest.com',
+    ogImage: 'https://revolucionfungifest.com/og-image.png'
   }
 ];
 

@@ -43,6 +43,13 @@ async function main() {
       fs.copyFileSync(contactBgPath, path.join(buildClientDir, 'contact-bg.jpg'));
       console.log('   ✓ Copied: contact-bg.jpg');
     }
+
+    // Copy og-image.png if it exists
+    const ogImagePath = path.join(publicDir, 'og-image.png');
+    if (fs.existsSync(ogImagePath)) {
+      fs.copyFileSync(ogImagePath, path.join(buildClientDir, 'og-image.png'));
+      console.log('   ✓ Copied: og-image.png');
+    }
     console.log('✅ Public assets copied\n');
 
     // Step 3: Pre-render React components to HTML

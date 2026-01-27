@@ -33,8 +33,12 @@
     {
       "target": "festival",
       "public": "build/client",
-      "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+      "ignore": ["firebase.json", "**/.*", "**/node_modules/**", "index.html"],
       "rewrites": [
+        {
+          "source": "/",
+          "destination": "/landing/festival.html"
+        },
         {
           "source": "**",
           "destination": "/landing/festival.html"

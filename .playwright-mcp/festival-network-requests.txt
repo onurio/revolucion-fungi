@@ -1,0 +1,3 @@
+[GET] http://127.0.0.1:5002/festival => [200] OK
+[GET] http://127.0.0.1:5002/assets/landing-55561fac.css => [200] OK
+[GET] http://127.0.0.1:5002/hero-mushroom.jpg => [200] OK

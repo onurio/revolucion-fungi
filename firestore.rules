@@ -14,24 +14,35 @@ service cloud.firestore {
     
     // Admin-only access to collectors collection
     match /collectors/{document} {
-      allow read, write: if request.auth != null && 
+      allow read, write: if request.auth != null &&
         request.auth.token.email in [
           "omrinuri@gmail.com",
           "micelio@revolucionfungi.com"
         ];
     }
-    
+
     // Public read access to fungiFields (needed for displaying dynamic fields on public fungi pages)
     // Admin-only write access
     match /fungiFields/{document} {
       allow read: if true;
-      allow write: if request.auth != null && 
+      allow write: if request.auth != null &&
         request.auth.token.email in [
           "omrinuri@gmail.com",
           "micelio@revolucionfungi.com"
         ];
     }
-    
+
+    // Public write access to festival-contacts (for contact form submissions)
+    // Admin read access only
+    match /festival-contacts/{document} {
+      allow create: if true; // Anyone can submit the contact form
+      allow read, update, delete: if request.auth != null &&
+        request.auth.token.email in [
+          "omrinuri@gmail.com",
+          "micelio@revolucionfungi.com"
+        ];
+    }
+
     // Deny access to all other collections
     match /{document=**} {
       allow read, write: if false;
