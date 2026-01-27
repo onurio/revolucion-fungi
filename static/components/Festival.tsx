@@ -69,7 +69,7 @@ const InfoSection: React.FC = () => {
         {/* Content */}
         <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16 w-full">
           <div className="space-y-6 text-white leading-relaxed">
-            <p className="text-xl md:text-2xl font-bold">
+            <p className="text-xl md:text-2xl font-bold text-justify">
               Revolución Fungi Fest - Oxapampa 2026 es el primer festival en la historia del Perú dedicado íntegramente al Reino Fungi que se realizará del 26 de febrero al 01 de marzo de 2026.
             </p>
 
