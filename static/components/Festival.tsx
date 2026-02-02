@@ -14,42 +14,134 @@ import countries from "../data/countries.json";
 
 const Navbar: React.FC = () => {
   return (
-    <nav className="fixed top-0 w-full bg-white z-50 border-b border-gray-200 h-20">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full">
-        <div className="flex items-center justify-between h-full">
-          <a href="#top" className="flex items-center">
-            <img
-              src="/festival-logo.png"
-              alt="Revolución Fungi Fest"
-              className="h-12"
-            />
-          </a>
-          <div className="hidden md:flex items-center space-x-8">
-            <a href="#info" className="text-gray-700 hover:text-orange-500 transition-colors font-bold uppercase">
+    <>
+      <nav className="fixed top-0 w-full bg-white z-50 border-b border-gray-200 h-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full">
+          <div className="flex items-center justify-between md:justify-between h-full">
+            {/* Mobile menu button - left side */}
+            <button
+              id="mobile-menu-button"
+              className="md:hidden p-2 text-gray-700 hover:text-orange-500 transition-colors"
+              aria-label="Toggle menu"
+            >
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+            </button>
+
+            {/* Logo - centered on mobile, left on desktop */}
+            <a href="#top" className="flex items-center absolute left-1/2 transform -translate-x-1/2 md:relative md:left-auto md:transform-none">
+              <img
+                src="/festival-logo.png"
+                alt="Revolución Fungi Fest"
+                className="h-12 object-contain"
+              />
+            </a>
+
+            {/* Desktop menu */}
+            <div className="hidden md:flex items-center space-x-8">
+              <a href="#info" className="text-gray-700 hover:text-orange-500 transition-colors font-bold uppercase">
+                Información
+              </a>
+              <a href="#actividades" className="text-gray-700 hover:text-orange-500 transition-colors font-bold uppercase">
+                Actividades
+              </a>
+              <a href="#entrada" className="text-gray-700 hover:text-orange-500 transition-colors font-bold uppercase">
+                Adquiere tu entrada
+              </a>
+            </div>
+
+            {/* Spacer for mobile to balance the centered logo */}
+            <div className="md:hidden w-10"></div>
+          </div>
+        </div>
+      </nav>
+
+      {/* Mobile menu */}
+      <div
+        id="mobile-menu"
+        className="fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden hidden"
+      >
+        <div className="fixed left-0 top-0 bottom-0 w-64 bg-white shadow-lg transform -translate-x-full transition-transform duration-300" id="mobile-menu-panel">
+          <div className="flex flex-col p-6 pt-24 space-y-6">
+            <a href="#info" className="mobile-menu-link text-gray-700 hover:text-orange-500 transition-colors font-bold uppercase text-lg">
               Información
             </a>
-            <a href="#actividades" className="text-gray-700 hover:text-orange-500 transition-colors font-bold uppercase">
+            <a href="#actividades" className="mobile-menu-link text-gray-700 hover:text-orange-500 transition-colors font-bold uppercase text-lg">
               Actividades
             </a>
-            <a href="#entrada" className="text-gray-700 hover:text-orange-500 transition-colors font-bold uppercase">
+            <a href="#entrada" className="mobile-menu-link text-gray-700 hover:text-orange-500 transition-colors font-bold uppercase text-lg">
               Adquiere tu entrada
             </a>
           </div>
         </div>
       </div>
-    </nav>
+
+      <script dangerouslySetInnerHTML={{ __html: `
+        (function() {
+          const menuButton = document.getElementById('mobile-menu-button');
+          const mobileMenu = document.getElementById('mobile-menu');
+          const mobileMenuPanel = document.getElementById('mobile-menu-panel');
+          const menuLinks = document.querySelectorAll('.mobile-menu-link');
+
+          function openMenu() {
+            mobileMenu.classList.remove('hidden');
+            setTimeout(() => {
+              mobileMenuPanel.classList.remove('-translate-x-full');
+            }, 10);
+          }
+
+          function closeMenu() {
+            mobileMenuPanel.classList.add('-translate-x-full');
+            setTimeout(() => {
+              mobileMenu.classList.add('hidden');
+            }, 300);
+          }
+
+          menuButton.addEventListener('click', openMenu);
+          mobileMenu.addEventListener('click', function(e) {
+            if (e.target === mobileMenu) {
+              closeMenu();
+            }
+          });
+
+          menuLinks.forEach(link => {
+            link.addEventListener('click', closeMenu);
+          });
+        })();
+      ` }} />
+    </>
   );
 };
 
 const HeroSection: React.FC = () => {
   return (
     <section
-      className="bg-white bg-contain bg-center bg-no-repeat"
+      className="bg-white flex items-center justify-center py-8 px-4"
       style={{
-        minHeight: 'var(--screen-height)',
-        backgroundImage: 'url(/festival-poster.jpg)'
+        height: 'var(--screen-height)'
       }}
     >
+      <img
+        src="/festival-poster.jpg"
+        alt="Revolución Fungi Fest 2026"
+        className="max-w-full max-h-full object-contain"
+      />
+    </section>
+  );
+};
+
+const PartnersSection: React.FC = () => {
+  return (
+    <section className="bg-white py-6">
+      <div className="max-w-4xl mx-auto px-4">
+        <img
+          src="/partner-logos.png"
+          alt="Partners"
+          className="w-full object-contain"
+          style={{ maxHeight: '120px' }}
+        />
+      </div>
     </section>
   );
 };
@@ -308,14 +400,53 @@ const Festival: React.FC = () => {
   return (
     <div className="min-h-screen bg-white">
       <style dangerouslySetInnerHTML={{ __html: `
+        @font-face {
+          font-family: 'AmsiPro';
+          src: url('/fonts/AmsiPro-Regular.otf') format('opentype');
+          font-weight: 400;
+          font-style: normal;
+        }
+        @font-face {
+          font-family: 'AmsiPro';
+          src: url('/fonts/AmsiPro-SemiBold.otf') format('opentype');
+          font-weight: 600;
+          font-style: normal;
+        }
+        @font-face {
+          font-family: 'AmsiPro';
+          src: url('/fonts/AmsiPro-Bold.otf') format('opentype');
+          font-weight: 700;
+          font-style: normal;
+        }
+        @font-face {
+          font-family: 'AmsiPro';
+          src: url('/fonts/AmsiPro-Black.otf') format('opentype');
+          font-weight: 900;
+          font-style: normal;
+        }
+
         :root {
-          --navbar-height: 9rem;
+          --navbar-height: 5rem;
           --screen-height: calc(100vh - var(--navbar-height));
+        }
+
+        body {
+          font-family: 'AmsiPro', sans-serif;
+          color: #000000;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+          font-weight: 700;
+        }
+
+        p {
+          font-weight: 600;
         }
       ` }} />
       <Navbar />
       <div className="pt-20">
         <HeroSection />
+        <PartnersSection />
         <InfoSection />
         <ActividadesSection />
         <ContactSection />

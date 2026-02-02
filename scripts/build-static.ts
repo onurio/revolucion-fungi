@@ -44,11 +44,32 @@ async function main() {
       console.log('   ✓ Copied: contact-bg.jpg');
     }
 
-    // Copy og-image.png if it exists
-    const ogImagePath = path.join(publicDir, 'og-image.png');
+    // Copy og-image.jpg if it exists
+    const ogImagePath = path.join(publicDir, 'og-image.jpg');
     if (fs.existsSync(ogImagePath)) {
-      fs.copyFileSync(ogImagePath, path.join(buildClientDir, 'og-image.png'));
-      console.log('   ✓ Copied: og-image.png');
+      fs.copyFileSync(ogImagePath, path.join(buildClientDir, 'og-image.jpg'));
+      console.log('   ✓ Copied: og-image.jpg');
+    }
+
+    // Copy partner-logos.png if it exists
+    const partnerLogosPath = path.join(publicDir, 'partner-logos.png');
+    if (fs.existsSync(partnerLogosPath)) {
+      fs.copyFileSync(partnerLogosPath, path.join(buildClientDir, 'partner-logos.png'));
+      console.log('   ✓ Copied: partner-logos.png');
+    }
+
+    // Copy fonts folder if it exists
+    const fontsDir = path.join(publicDir, 'fonts');
+    if (fs.existsSync(fontsDir)) {
+      const buildFontsDir = path.join(buildClientDir, 'fonts');
+      if (!fs.existsSync(buildFontsDir)) {
+        fs.mkdirSync(buildFontsDir, { recursive: true });
+      }
+      const fontFiles = fs.readdirSync(fontsDir);
+      fontFiles.forEach(file => {
+        fs.copyFileSync(path.join(fontsDir, file), path.join(buildFontsDir, file));
+      });
+      console.log(`   ✓ Copied: fonts/ (${fontFiles.length} files)`);
     }
     console.log('✅ Public assets copied\n');
 
