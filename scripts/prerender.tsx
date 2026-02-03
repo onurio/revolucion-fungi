@@ -147,7 +147,7 @@ ${bodyContent}
         timestamp: new Date(),
         source: 'festival-page',
         // Trigger Email extension fields
-        to: 'micelio@revolucionfungi.com',
+        to: 'info@revolucionfungifest.com',
         message: {
           subject: 'Nuevo contacto del Festival - Revolución Fungi Fest',
           html: \`
