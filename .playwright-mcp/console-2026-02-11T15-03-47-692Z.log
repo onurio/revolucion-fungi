@@ -1,0 +1,16 @@
+[      30ms] [ERROR] Failed to load resource: the server responded with a status of 404 (File not found) @ http://localhost:8765/festival-logo.png:0
+[      31ms] [ERROR] Failed to load resource: the server responded with a status of 404 (File not found) @ http://localhost:8765/assets/landing-6be4d1a9.css:0
+[      32ms] [ERROR] Failed to load resource: the server responded with a status of 404 (File not found) @ http://localhost:8765/festival-poster.jpg:0
+[      33ms] [ERROR] Failed to load resource: the server responded with a status of 404 (File not found) @ http://localhost:8765/activities/categories/05.png:0
+[      33ms] [ERROR] Failed to load resource: the server responded with a status of 404 (File not found) @ http://localhost:8765/activities/categories/04.png:0
+[      35ms] [ERROR] Failed to load resource: the server responded with a status of 404 (File not found) @ http://localhost:8765/activities/categories/06.png:0
+[      36ms] [ERROR] Failed to load resource: the server responded with a status of 404 (File not found) @ http://localhost:8765/activities/categories/03.png:0
+[      37ms] [ERROR] Failed to load resource: the server responded with a status of 404 (File not found) @ http://localhost:8765/activities/categories/08.png:0
+[      39ms] [ERROR] Failed to load resource: the server responded with a status of 404 (File not found) @ http://localhost:8765/activities/categories/07.png:0
+[      41ms] [ERROR] Failed to load resource: the server responded with a status of 404 (File not found) @ http://localhost:8765/contact-bg.jpg:0
+[      41ms] [ERROR] Failed to load resource: the server responded with a status of 404 (File not found) @ http://localhost:8765/partner-logos.png:0
+[      66ms] [ERROR] Failed to load resource: the server responded with a status of 404 (File not found) @ http://localhost:8765/info-bg-new.jpg:0
+[      70ms] [ERROR] Failed to load resource: the server responded with a status of 404 (File not found) @ http://localhost:8765/fonts/AmsiPro-SemiBold.otf:0
+[      72ms] [ERROR] Failed to load resource: the server responded with a status of 404 (File not found) @ http://localhost:8765/fonts/AmsiPro-Regular.otf:0
+[      76ms] [ERROR] Failed to load resource: the server responded with a status of 404 (File not found) @ http://localhost:8765/fonts/AmsiPro-Bold.otf:0
+[      89ms] [ERROR] Failed to load resource: the server responded with a status of 404 (File not found) @ http://localhost:8765/favicon.svg:0

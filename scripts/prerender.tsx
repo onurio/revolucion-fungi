@@ -125,7 +125,9 @@ ${bodyContent}
   const db = getFirestore(app);
 
   const form = document.getElementById('contact-form');
-  const messageDiv = document.getElementById('form-message');
+  const submitButton = document.getElementById('submit-button');
+  const buttonText = document.getElementById('button-text');
+  const buttonSpinner = document.getElementById('button-spinner');
 
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -135,8 +137,10 @@ ${bodyContent}
     const codigo_pais = document.getElementById('codigo_pais').value;
     const telefono = document.getElementById('telefono').value;
 
-    messageDiv.textContent = 'Enviando...';
-    messageDiv.className = 'text-center text-sm text-gray-600';
+    // Show loading state
+    submitButton.disabled = true;
+    buttonText.textContent = 'Enviando...';
+    buttonSpinner.classList.remove('hidden');
 
     try {
       await addDoc(collection(db, 'festival-contacts'), {
@@ -161,17 +165,24 @@ ${bodyContent}
         }
       });
 
-      messageDiv.textContent = '¡Gracias! Te contactaremos pronto.';
-      messageDiv.className = 'text-center text-sm text-green-600 font-bold';
+      // Show success alert
+      alert('¡Gracias por tu interés! Te contactaremos pronto.');
       form.reset();
 
-      setTimeout(() => {
-        messageDiv.textContent = '';
-      }, 5000);
+      // Reset button state
+      submitButton.disabled = false;
+      buttonText.textContent = 'Enviar';
+      buttonSpinner.classList.add('hidden');
     } catch (error) {
       console.error('Error:', error);
-      messageDiv.textContent = 'Error al enviar. Por favor intenta de nuevo.';
-      messageDiv.className = 'text-center text-sm text-red-600 font-bold';
+
+      // Show error alert
+      alert('Error al enviar el formulario. Por favor intenta de nuevo.');
+
+      // Reset button state
+      submitButton.disabled = false;
+      buttonText.textContent = 'Enviar';
+      buttonSpinner.classList.add('hidden');
     }
   });
 </script>

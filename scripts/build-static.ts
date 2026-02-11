@@ -58,6 +58,13 @@ async function main() {
       console.log('   ✓ Copied: partner-logos.png');
     }
 
+    // Copy festival-poster.jpg if it exists
+    const festivalPosterPath = path.join(publicDir, 'festival-poster.jpg');
+    if (fs.existsSync(festivalPosterPath)) {
+      fs.copyFileSync(festivalPosterPath, path.join(buildClientDir, 'festival-poster.jpg'));
+      console.log('   ✓ Copied: festival-poster.jpg');
+    }
+
     // Copy fonts folder if it exists
     const fontsDir = path.join(publicDir, 'fonts');
     if (fs.existsSync(fontsDir)) {
@@ -70,6 +77,34 @@ async function main() {
         fs.copyFileSync(path.join(fontsDir, file), path.join(buildFontsDir, file));
       });
       console.log(`   ✓ Copied: fonts/ (${fontFiles.length} files)`);
+    }
+
+    // Copy activities folder recursively
+    const activitiesDir = path.join(publicDir, 'activities');
+    if (fs.existsSync(activitiesDir)) {
+      const buildActivitiesDir = path.join(buildClientDir, 'activities');
+
+      function copyRecursiveSync(src: string, dest: string): number {
+        if (!fs.existsSync(dest)) {
+          fs.mkdirSync(dest, { recursive: true });
+        }
+        const entries = fs.readdirSync(src, { withFileTypes: true });
+        let fileCount = 0;
+        for (const entry of entries) {
+          const srcPath = path.join(src, entry.name);
+          const destPath = path.join(dest, entry.name);
+          if (entry.isDirectory()) {
+            fileCount += copyRecursiveSync(srcPath, destPath);
+          } else {
+            fs.copyFileSync(srcPath, destPath);
+            fileCount++;
+          }
+        }
+        return fileCount;
+      }
+
+      const fileCount = copyRecursiveSync(activitiesDir, buildActivitiesDir);
+      console.log(`   ✓ Copied: activities/ (${fileCount} files)`);
     }
     console.log('✅ Public assets copied\n');
 

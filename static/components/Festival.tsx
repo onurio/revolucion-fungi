@@ -161,19 +161,19 @@ const InfoSection: React.FC = () => {
         {/* Content */}
         <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16 w-full">
           <div className="space-y-6 text-white leading-relaxed">
-            <p className="text-xl md:text-2xl font-bold text-justify">
+            <p className="text-2xl font-bold text-justify">
               Revolución Fungi Fest - Oxapampa 2026 es el primer festival en la historia del Perú dedicado íntegramente al Reino Fungi que se realizará del 26 de febrero al 01 de marzo de 2026.
             </p>
 
-            <p className="text-base md:text-lg text-justify">
+            <p className="text-base text-justify">
               El Revolución Fungi Fest – Festival de los Hongos del Perú es un movimiento ciudadano enfocado en la ciencia, la cultura y la comunidad que reune destacados micólogos, artistas, científicos, representantes comunitarios, pueblos originarios, conservacionistas, emprendedores y entusiastas de los hongos para explorar todo lo relacionado al Reino Fungi. Más que un festival, somos un encuentro donde la comunidad fungi se reune para celebrar a los hongos y su impacto en el mundo. ¡Celebremos nuestro amor por los hongos!
             </p>
 
-            <p className="text-base md:text-lg text-justify">
+            <p className="text-base text-justify">
               Como festival sin fines de lucro, les pedimos cordialmente que consideren apoyar nuestras actividades, cuyo objetivo es mantener los costos para nuestros invitados y asistentes lo más accesibles posible. Cualquier donación marca la diferencia y nos ayuda a cubrir alojamiento y transporte para nuestros invitados que llegan desde otras partes del mundo, becas para nuestros colaboradores y nuestros programas comunitarios gratuitos. Si donar no es una opción, les pedimos que compartan información sobre RFF; todo apoyo importa.
             </p>
 
-            <p className="text-base md:text-lg">
+            <p className="text-base">
               ¡Esperamos verte en las montañas de Oxapampa este febrero!
             </p>
           </div>
@@ -182,11 +182,11 @@ const InfoSection: React.FC = () => {
 
       {/* How to Participate Section */}
       <div className="bg-white">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-4">
           <h2 className="text-2xl font-bold text-gray-900 mb-6">
             ¿CÓMO PARTICIPAR DEL FESTIVAL?
           </h2>
-          <p className="text-gray-700 leading-relaxed">
+          <p className="text-base text-gray-700 leading-relaxed text-justify">
             Tenemos programados muchos talleres, charlas, conferencias, feria fungi, pasacalle, salidas al bosque a observar hongos, exposiciones de arte y fotografía, música en vivo, gastronomía, cine y otros eventos inéditos para el festival este año. Aquí encontrarás información útil: programa de actividades, cronograma, invitados, como adquirir tu entrada o participar con un stand.
           </p>
         </div>
@@ -195,85 +195,367 @@ const InfoSection: React.FC = () => {
   );
 };
 
-const ActividadesSection: React.FC = () => {
-  const activities = [
+const VisualActivitiesSection: React.FC = () => {
+  const categories = [
     {
-      title: "Feria Fungi",
-      description: "Exhibición de emprendimientos y venta de productos y tecnologías basadas en hongos, así como talleres gratuitos dirigidos al público en general.",
-      color: "#d94c4a"
+      id: 'masterclass',
+      title: 'MASTERCLASS Y CONVERSATORIOS',
+      image: '/activities/categories/03.jpg',
+      alt: 'Masterclass y Conversatorios',
+      activities: [
+        {
+          name: 'Dra. María Holgado',
+          subtitle: 'Sembrando Micelio en los Andes',
+          images: [
+            '/activities/masterclass/maria-holgado-01.jpg',
+            '/activities/masterclass/maria-holgado-02.jpg',
+            '/activities/masterclass/maria-holgado-03.jpg'
+          ]
+        },
+        {
+          name: 'Ing. Ingrid Illiquin',
+          subtitle: 'Maestría en Micología',
+          images: [
+            '/activities/masterclass/ingrid-illiquin-01.jpg',
+            '/activities/masterclass/ingrid-illiquin-02.jpg',
+            '/activities/masterclass/ingrid-illiquin-03.jpg'
+          ]
+        },
+        {
+          name: 'Santiago Acosta',
+          subtitle: 'Experto Internacional',
+          images: [
+            '/activities/masterclass/santiago-acosta-01.jpg',
+            '/activities/masterclass/santiago-acosta-02.jpg',
+            '/activities/masterclass/santiago-acosta-03.jpg',
+            '/activities/masterclass/santiago-acosta-04.jpg'
+          ]
+        },
+        {
+          name: 'Alan Rockefeller',
+          subtitle: 'Experto Internacional',
+          images: [
+            '/activities/masterclass/alan-rockefeller-01.jpg',
+            '/activities/masterclass/alan-rockefeller-02.jpg',
+            '/activities/masterclass/alan-rockefeller-03.jpg',
+            '/activities/masterclass/alan-rockefeller-04.jpg',
+            '/activities/masterclass/alan-rockefeller-05.jpg',
+            '/activities/masterclass/alan-rockefeller-06.jpg'
+          ]
+        },
+        {
+          name: 'Santiago Jaramillo',
+          subtitle: 'Experto Internacional',
+          images: [
+            '/activities/masterclass/santiago-jaramillo-01.jpg',
+            '/activities/masterclass/santiago-jaramillo-02.jpg',
+            '/activities/masterclass/santiago-jaramillo-03.jpg',
+            '/activities/masterclass/santiago-jaramillo-04.jpg'
+          ]
+        },
+        {
+          name: 'Webinars',
+          subtitle: 'Charlas Virtuales',
+          images: [
+            '/activities/masterclass/webinars-01.jpg',
+            '/activities/masterclass/webinars-02.jpg',
+            '/activities/masterclass/webinars-03.jpg'
+          ]
+        }
+      ]
     },
     {
-      title: "Ciclo de Conferencias",
-      description: "Charlas magistrales en el Auditorio Municipal, a cargo de expertos nacionales e internacionales provenientes de EE.UU., Holanda, Argentina, Colombia, Chile y diversas universidades, ONG´s e institutos de investigación nacionales (UNALM, UNTRM, UNSAC, UNAS, entre otros).",
-      color: "#3c8d1f"
+      id: 'talleres',
+      title: 'TALLERES',
+      image: '/activities/categories/04.jpg',
+      alt: 'Talleres',
+      activities: [
+        {
+          name: 'Koa Prato',
+          subtitle: 'Ilustración Científica Fungi',
+          images: [
+            '/activities/talleres/koa-prato-01.jpg',
+            '/activities/talleres/koa-prato-02.jpg',
+            '/activities/talleres/koa-prato-03.jpg'
+          ]
+        }
+      ]
     },
     {
-      title: "Salidas al Bosque",
-      description: "Actividades guiadas por expertos para la identificación de hongos en los bosques del Parque Nacional Yanachaga Chemillén y la Ecoaldea Tierra de Bosques. Nos acompañará un tour bioacústico en vivo.",
-      color: "#42c0e5"
+      id: 'feria',
+      title: 'FERIA FUNGI',
+      image: '/activities/categories/05.jpg',
+      alt: 'Feria Fungi',
+      activities: []
     },
     {
-      title: "Talleres Especializados",
-      description: "Capacitación en vivo por expertos internacionales en el cultivo de hongos, medicina fungi, gastronomía y otros temas, en la Biblioteca Municipal.",
-      color: "#ebc104"
+      id: 'caminatas',
+      title: 'CAMINATAS EN EL BOSQUE',
+      image: '/activities/categories/06.jpg',
+      alt: 'Caminatas en el Bosque',
+      activities: []
     },
     {
-      title: "Exposición Fotográfica \"Hongos de Oxapampa\"",
-      description: "Exposición de especies de hongos representativas de la provincia de Oxapampa, a desarrollarse en la glorieta del Pasaje Los Colonos.",
-      color: "#79b893"
+      id: 'cultural',
+      title: 'CINE / NOCHES CULTURALES / EXPOSICIÓN',
+      image: '/activities/categories/07.jpg',
+      alt: 'Actividades Culturales',
+      activities: []
     },
     {
-      title: "Intervención Artística",
-      description: "Intervención en vivo sobre la riqueza fúngica local a cargo de tres (03) artistas nacionales reconocidos.",
-      color: "#e29a8e"
-    },
-    {
-      title: "Cinema Oxapampa",
-      description: "Proyección de películas y documentales sobre el Reino Fungi.",
-      color: "#0187c5"
-    },
-    {
-      title: "Noches Culturales",
-      description: "Presentaciones de bandas y grupos musicales así como lanzamientos sorpresa.",
-      color: "#d94c4a"
-    },
-    {
-      title: "Pasacalle Cultural",
-      description: "Recorrido por la Plaza Principal con comparsas, comunidades nativas, instituciones y pobladores celebrando nuestra identidad y biodiversidad.",
-      color: "#3c8d1f"
+      id: 'pasacalle',
+      title: 'PASACALLE FUNGI',
+      image: '/activities/categories/08.jpg',
+      alt: 'Pasacalle Fungi',
+      activities: []
     }
   ];
 
   return (
-    <section id="actividades" className="bg-white py-4 mt-4" style={{ scrollMarginTop: 'var(--navbar-height)' }}>
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h2 className="text-2xl font-bold text-gray-900 mb-3">ACTIVIDADES</h2>
+    <>
+      <section id="actividades" className="bg-white py-12" style={{ scrollMarginTop: 'var(--navbar-height)' }}>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-2xl font-bold text-gray-900 mb-8 text-center">
+            NUESTRAS ACTIVIDADES
+          </h2>
 
-        <p className="text-gray-700 text-sm leading-snug mb-4">
-          Como parte del programa, se desarrollarán actividades sociales y culturales orientadas a integrar a la comunidad, fomentar el intercambio de conocimiento entre visitantes nacionales e internacionales y destacar el carácter artístico, científico, productivo y hospitalario de Oxapampa. Entre ellas:
-        </p>
-
-        <div className="space-y-2">
-          {activities.map((activity, idx) => (
-            <div
-              key={idx}
-              className="border-l-4 pl-3 py-1"
-              style={{ borderLeftColor: activity.color }}
-            >
-              <h3
-                className="text-base md:text-lg font-bold mb-1 uppercase"
-                style={{ color: activity.color }}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {categories.map(category => (
+              <div
+                key={category.id}
+                className="cursor-pointer category-card relative overflow-hidden rounded-lg shadow-lg hover:shadow-xl transition-all group"
+                data-category-id={category.id}
               >
-                {activity.title}
-              </h3>
-              <p className="text-gray-700 text-xs leading-snug">
-                {activity.description}
-              </p>
+                <img
+                  src={category.image}
+                  alt={category.alt}
+                  className="w-full h-auto"
+                />
+                <div className="absolute inset-0 bg-black bg-opacity-0 md:group-hover:bg-opacity-40 transition-all duration-300 flex items-end md:items-center justify-center pb-6 md:pb-0">
+                  <button className="bg-white text-gray-900 px-6 py-3 rounded-full font-bold text-sm md:text-base opacity-100 md:opacity-0 md:group-hover:opacity-100 transform translate-y-0 md:translate-y-4 md:group-hover:translate-y-0 transition-all duration-300 shadow-lg hover:bg-gray-100">
+                    VER MÁS
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Activity List Modal */}
+      <div id="activity-modal" className="hidden fixed inset-0 bg-black bg-opacity-75 z-50 overflow-y-auto">
+        <div className="min-h-screen px-4 flex items-center justify-center">
+          <div className="relative bg-white rounded-lg max-w-5xl w-full my-8 p-6 md:p-8">
+            <button
+              id="close-activity-modal"
+              className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 text-3xl font-bold"
+              aria-label="Close"
+            >
+              &times;
+            </button>
+            <h3 id="activity-modal-title" className="text-2xl font-bold text-gray-900 mb-6 text-center"></h3>
+            <div id="activity-list" className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+            <div id="no-activities-message" className="hidden text-center py-12">
+              <p className="text-xl text-gray-600">Próximamente más información</p>
             </div>
-          ))}
+          </div>
         </div>
       </div>
-    </section>
+
+      {/* Image Carousel Modal */}
+      <div id="carousel-modal" className="hidden fixed inset-0 bg-black bg-opacity-90 z-50">
+        <div className="h-full flex flex-col">
+          <div className="flex justify-between items-center p-4">
+            <button
+              id="back-to-activities"
+              className="text-white hover:text-gray-300 text-lg font-bold flex items-center gap-2"
+            >
+              <span>&larr;</span> Volver
+            </button>
+            <h3 id="carousel-activity-name" className="text-white text-xl font-bold flex-1 text-center"></h3>
+            <button
+              id="close-carousel-modal"
+              className="text-white hover:text-gray-300 text-3xl font-bold"
+              aria-label="Close"
+            >
+              &times;
+            </button>
+          </div>
+          <div className="flex-1 flex items-center justify-center px-4">
+            <button
+              id="carousel-prev"
+              className="text-white hover:text-gray-300 text-4xl font-bold px-4 md:px-8"
+              aria-label="Previous"
+            >
+              &lsaquo;
+            </button>
+            <div className="flex-1 max-w-4xl">
+              <img
+                id="carousel-image"
+                src=""
+                alt=""
+                className="w-full h-auto max-h-[70vh] object-contain"
+              />
+            </div>
+            <button
+              id="carousel-next"
+              className="text-white hover:text-gray-300 text-4xl font-bold px-4 md:px-8"
+              aria-label="Next"
+            >
+              &rsaquo;
+            </button>
+          </div>
+          <div id="carousel-dots" className="flex justify-center gap-2 p-4"></div>
+        </div>
+      </div>
+
+      <script dangerouslySetInnerHTML={{ __html: `
+        (function() {
+          const categoriesData = ${JSON.stringify(categories)};
+
+          // Modal elements
+          const activityModal = document.getElementById('activity-modal');
+          const carouselModal = document.getElementById('carousel-modal');
+          const activityModalTitle = document.getElementById('activity-modal-title');
+          const activityList = document.getElementById('activity-list');
+          const noActivitiesMessage = document.getElementById('no-activities-message');
+          const carouselImage = document.getElementById('carousel-image');
+          const carouselDots = document.getElementById('carousel-dots');
+          const carouselActivityName = document.getElementById('carousel-activity-name');
+
+          let currentCategory = null;
+          let currentActivityImages = [];
+          let currentImageIndex = 0;
+          let currentActivityName = '';
+
+          // Category card click handlers
+          document.querySelectorAll('.category-card').forEach(card => {
+            card.addEventListener('click', function() {
+              const categoryId = this.dataset.categoryId;
+              openActivityModal(categoryId);
+            });
+          });
+
+          function openActivityModal(categoryId) {
+            currentCategory = categoriesData.find(c => c.id === categoryId);
+            if (!currentCategory) return;
+
+            activityModalTitle.textContent = currentCategory.title;
+
+            if (currentCategory.activities.length === 0) {
+              activityList.classList.add('hidden');
+              noActivitiesMessage.classList.remove('hidden');
+            } else {
+              activityList.classList.remove('hidden');
+              noActivitiesMessage.classList.add('hidden');
+
+              activityList.innerHTML = '';
+              currentCategory.activities.forEach((activity, index) => {
+                const activityCard = document.createElement('div');
+                activityCard.className = 'cursor-pointer hover:opacity-90 transition-opacity';
+                activityCard.innerHTML = \`
+                  <div class="bg-white border-2 border-gray-200 rounded-lg overflow-hidden hover:border-orange-500 transition-colors">
+                    <img src="\${activity.images[0]}" alt="\${activity.name}" class="w-full h-64 object-cover" />
+                    <div class="p-4">
+                      <h4 class="font-bold text-gray-900 text-lg">\${activity.name}</h4>
+                      <p class="text-gray-600 text-sm">\${activity.subtitle}</p>
+                    </div>
+                  </div>
+                \`;
+                activityCard.addEventListener('click', () => openCarousel(activity.images, activity.name));
+                activityList.appendChild(activityCard);
+              });
+            }
+
+            activityModal.classList.remove('hidden');
+          }
+
+          function openCarousel(images, activityName) {
+            currentActivityImages = images;
+            currentActivityName = activityName;
+            currentImageIndex = 0;
+            carouselActivityName.textContent = activityName;
+            updateCarouselImage();
+            activityModal.classList.add('hidden');
+            carouselModal.classList.remove('hidden');
+          }
+
+          function updateCarouselImage() {
+            carouselImage.src = currentActivityImages[currentImageIndex];
+
+            // Update dots
+            carouselDots.innerHTML = '';
+            currentActivityImages.forEach((_, index) => {
+              const dot = document.createElement('button');
+              dot.className = 'w-3 h-3 rounded-full transition-colors ' +
+                (index === currentImageIndex ? 'bg-white' : 'bg-gray-500');
+              dot.addEventListener('click', () => {
+                currentImageIndex = index;
+                updateCarouselImage();
+              });
+              carouselDots.appendChild(dot);
+            });
+          }
+
+          // Close modal handlers
+          document.getElementById('close-activity-modal').addEventListener('click', () => {
+            activityModal.classList.add('hidden');
+          });
+
+          document.getElementById('close-carousel-modal').addEventListener('click', () => {
+            carouselModal.classList.add('hidden');
+          });
+
+          document.getElementById('back-to-activities').addEventListener('click', () => {
+            carouselModal.classList.add('hidden');
+            if (currentCategory && currentCategory.activities.length > 0) {
+              activityModal.classList.remove('hidden');
+            }
+          });
+
+          // Carousel navigation
+          document.getElementById('carousel-prev').addEventListener('click', () => {
+            currentImageIndex = (currentImageIndex - 1 + currentActivityImages.length) % currentActivityImages.length;
+            updateCarouselImage();
+          });
+
+          document.getElementById('carousel-next').addEventListener('click', () => {
+            currentImageIndex = (currentImageIndex + 1) % currentActivityImages.length;
+            updateCarouselImage();
+          });
+
+          // Keyboard navigation
+          document.addEventListener('keydown', (e) => {
+            if (!carouselModal.classList.contains('hidden')) {
+              if (e.key === 'ArrowLeft') {
+                document.getElementById('carousel-prev').click();
+              } else if (e.key === 'ArrowRight') {
+                document.getElementById('carousel-next').click();
+              } else if (e.key === 'Escape') {
+                document.getElementById('close-carousel-modal').click();
+              }
+            } else if (!activityModal.classList.contains('hidden')) {
+              if (e.key === 'Escape') {
+                document.getElementById('close-activity-modal').click();
+              }
+            }
+          });
+
+          // Click outside to close
+          activityModal.addEventListener('click', (e) => {
+            if (e.target === activityModal) {
+              activityModal.classList.add('hidden');
+            }
+          });
+
+          carouselModal.addEventListener('click', (e) => {
+            if (e.target === carouselModal) {
+              carouselModal.classList.add('hidden');
+            }
+          });
+        })();
+      ` }} />
+    </>
   );
 };
 
@@ -355,21 +637,56 @@ const ContactSection: React.FC = () => {
               </div>
 
               <button
+                id="submit-button"
                 type="submit"
-                className="w-full text-white font-bold py-3 px-6 rounded-lg transition-all uppercase hover-button"
+                className="w-full text-white font-bold py-3 px-6 rounded-lg transition-all uppercase hover-button flex items-center justify-center gap-2"
                 style={{ backgroundColor: '#42c0e5' }}
               >
-                Enviar
+                <svg
+                  id="button-spinner"
+                  className="hidden animate-spin h-5 w-5 text-white"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  ></circle>
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                  ></path>
+                </svg>
+                <span id="button-text">Enviar</span>
               </button>
               <style dangerouslySetInnerHTML={{ __html: `
-                .hover-button:hover {
+                .hover-button:hover:not(:disabled) {
                   background-color: #0187c5 !important;
                   transform: translateY(-2px);
                   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
                 }
+                .hover-button:disabled {
+                  opacity: 0.7;
+                  cursor: not-allowed;
+                }
+                @keyframes spin {
+                  from {
+                    transform: rotate(0deg);
+                  }
+                  to {
+                    transform: rotate(360deg);
+                  }
+                }
+                .animate-spin {
+                  animation: spin 1s linear infinite;
+                }
               ` }} />
-
-              <div id="form-message" className="text-center text-sm"></div>
             </form>
             </div>
           </div>
@@ -384,7 +701,7 @@ const Footer: React.FC = () => {
     <footer className="relative py-12 px-4 sm:px-6 lg:px-8 border-t border-gray-200 bg-white">
       <div className="max-w-7xl mx-auto">
         <div className="flex flex-col md:flex-row justify-between items-center">
-          <p className="text-gray-500 mb-4 md:mb-0">&copy; 2025 Revolución Fungi. Todos los derechos reservados.</p>
+          <p className="text-gray-500 mb-4 md:mb-0">&copy; 2026 Revolución Fungi. Todos los derechos reservados.</p>
           <div className="flex space-x-6">
             <a href="https://www.instagram.com/revolucionfungifest" target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-orange-500 transition-colors">Instagram</a>
             <a href="mailto:info@revolucionfungi.com" className="text-gray-500 hover:text-orange-500 transition-colors">Email</a>
@@ -446,10 +763,10 @@ const Festival: React.FC = () => {
       <Navbar />
       <div className="pt-20">
         <HeroSection />
-        <PartnersSection />
         <InfoSection />
-        <ActividadesSection />
+        <VisualActivitiesSection />
         <ContactSection />
+        <PartnersSection />
       </div>
       <Footer />
     </div>
