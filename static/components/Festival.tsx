@@ -50,8 +50,8 @@ const Navbar: React.FC = () => {
               <a href="https://tickets.revolucionfungifest.com" target="_blank" rel="noopener noreferrer" className="bg-orange-500 hover:bg-orange-600 text-white font-bold uppercase px-5 py-2 rounded-full transition-colors">Compra tu Entrada</a>
             </div>
 
-            {/* Mobile CTA button - always visible on mobile without opening menu */}
-            <a href="https://tickets.revolucionfungifest.com" target="_blank" rel="noopener noreferrer" className="md:hidden bg-orange-500 hover:bg-orange-600 text-white font-bold uppercase text-xs px-3 py-2 rounded-full transition-colors">Entradas</a>
+            {/* Spacer for mobile to balance the centered logo */}
+            <div className="md:hidden w-10"></div>
           </div>
         </div>
       </nav>
@@ -787,6 +787,19 @@ const Festival: React.FC = () => {
         <PartnersSection />
       </div>
       <Footer />
+
+      {/* Floating ticket CTA — mobile only */}
+      <a
+        href="https://tickets.revolucionfungifest.com"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="md:hidden fixed bottom-6 left-1/2 -translate-x-1/2 z-30 flex items-center gap-2 bg-orange-500 hover:bg-orange-600 text-white font-bold uppercase px-6 py-3 rounded-full shadow-lg transition-colors whitespace-nowrap"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z"/>
+        </svg>
+        Compra tu Entrada
+      </a>
     </div>
   );
 };
