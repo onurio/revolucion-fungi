@@ -46,13 +46,12 @@ const Navbar: React.FC = () => {
               <a href="#actividades" className="text-gray-700 hover:text-orange-500 transition-colors font-bold uppercase">
                 Actividades
               </a>
-              <a href="#entrada" className="text-gray-700 hover:text-orange-500 transition-colors font-bold uppercase">
-                Adquiere tu entrada
-              </a>
+              <a href="#contacto" className="text-gray-700 hover:text-orange-500 transition-colors font-bold uppercase">Contacto</a>
+              <a href="https://tickets.revolucionfungifest.com" target="_blank" rel="noopener noreferrer" className="bg-orange-500 hover:bg-orange-600 text-white font-bold uppercase px-5 py-2 rounded-full transition-colors">Compra tu Entrada</a>
             </div>
 
-            {/* Spacer for mobile to balance the centered logo */}
-            <div className="md:hidden w-10"></div>
+            {/* Mobile CTA button - always visible on mobile without opening menu */}
+            <a href="https://tickets.revolucionfungifest.com" target="_blank" rel="noopener noreferrer" className="md:hidden bg-orange-500 hover:bg-orange-600 text-white font-bold uppercase text-xs px-3 py-2 rounded-full transition-colors">Entradas</a>
           </div>
         </div>
       </nav>
@@ -70,9 +69,10 @@ const Navbar: React.FC = () => {
             <a href="#actividades" className="mobile-menu-link text-gray-700 hover:text-orange-500 transition-colors font-bold uppercase text-lg">
               Actividades
             </a>
-            <a href="#entrada" className="mobile-menu-link text-gray-700 hover:text-orange-500 transition-colors font-bold uppercase text-lg">
-              Adquiere tu entrada
+            <a href="#contacto" className="mobile-menu-link text-gray-700 hover:text-orange-500 transition-colors font-bold uppercase text-lg">
+              Contacto
             </a>
+            <a href="https://tickets.revolucionfungifest.com" target="_blank" rel="noopener noreferrer" className="mobile-menu-link block bg-orange-500 hover:bg-orange-600 text-white text-center font-bold uppercase text-lg px-4 py-3 rounded-xl transition-colors">Compra tu Entrada</a>
           </div>
         </div>
       </div>
@@ -132,15 +132,33 @@ const HeroSection: React.FC = () => {
 };
 
 const PartnersSection: React.FC = () => {
+  const logos: { src: string; alt: string; height?: string; maxWidth?: string }[] = [
+    { src: '/partner_logos/clean/revolucion-fungi.png', alt: 'Revolución Fungi' },
+    { src: '/partner_logos/clean/parque-yanachaga.jpg', alt: 'Parque Nacional Yanachaga-Chemillén SERNANP' },
+    { src: '/partner_logos/clean/municipalidad-oxapampa.svg', alt: 'Municipalidad de Oxapampa' },
+    { src: '/partner_logos/clean/bioay.png', alt: 'BIOAY', height: '100px', maxWidth: '220px' },
+    { src: '/partner_logos/clean/kowen-antami.png', alt: 'Consorcio Kowen Antami' },
+    { src: '/partner_logos/clean/cinema-oxa.png', alt: 'Cinema Oxa' },
+  ];
+
   return (
-    <section className="bg-white py-6">
-      <div className="max-w-4xl mx-auto px-4">
-        <img
-          src="/partner-logos.png"
-          alt="Partners"
-          className="w-full object-contain"
-          style={{ maxHeight: '120px' }}
-        />
+    <section className="bg-white py-8">
+      <div className="max-w-6xl mx-auto px-6">
+        <div className="flex flex-wrap justify-center items-center gap-8">
+          {logos.map((logo) => (
+            <img
+              key={logo.alt}
+              src={logo.src}
+              alt={logo.alt}
+              style={{
+                height: logo.height || '60px',
+                maxWidth: logo.maxWidth || '140px',
+                objectFit: 'contain',
+                filter: 'none',
+              }}
+            />
+          ))}
+        </div>
       </div>
     </section>
   );
@@ -561,7 +579,7 @@ const VisualActivitiesSection: React.FC = () => {
 
 const ContactSection: React.FC = () => {
   return (
-    <section id="entrada" className="bg-white py-16 mt-16" style={{ scrollMarginTop: 'var(--navbar-height)' }}>
+    <section id="contacto" className="bg-white py-16 mt-16" style={{ scrollMarginTop: 'var(--navbar-height)' }}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
           {/* Left side - Image (visible on desktop) */}
@@ -588,7 +606,7 @@ const ContactSection: React.FC = () => {
             <div className="absolute inset-0 bg-black bg-opacity-40 rounded-lg lg:hidden"></div>
 
             <div className="relative z-10">
-              <h2 className="text-3xl font-bold mb-8 text-white lg:text-[#42c0e5]">ADQUIERE TU ENTRADA</h2>
+              <h2 className="text-3xl font-bold mb-8 text-white lg:text-[#42c0e5]">CONTACTO</h2>
               <form id="contact-form" className="space-y-6">
               <div>
                 <input

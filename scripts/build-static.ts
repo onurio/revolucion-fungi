@@ -51,11 +51,18 @@ async function main() {
       console.log('   ✓ Copied: og-image.jpg');
     }
 
-    // Copy partner-logos.png if it exists
-    const partnerLogosPath = path.join(publicDir, 'partner-logos.png');
-    if (fs.existsSync(partnerLogosPath)) {
-      fs.copyFileSync(partnerLogosPath, path.join(buildClientDir, 'partner-logos.png'));
-      console.log('   ✓ Copied: partner-logos.png');
+    // Copy partner_logos/clean folder
+    const partnerLogosDir = path.join(publicDir, 'partner_logos', 'clean');
+    if (fs.existsSync(partnerLogosDir)) {
+      const buildPartnerDir = path.join(buildClientDir, 'partner_logos', 'clean');
+      if (!fs.existsSync(buildPartnerDir)) {
+        fs.mkdirSync(buildPartnerDir, { recursive: true });
+      }
+      const logoFiles = fs.readdirSync(partnerLogosDir);
+      logoFiles.forEach(file => {
+        fs.copyFileSync(path.join(partnerLogosDir, file), path.join(buildPartnerDir, file));
+      });
+      console.log(`   ✓ Copied: partner_logos/clean/ (${logoFiles.length} files)`);
     }
 
     // Copy festival-poster.jpg if it exists

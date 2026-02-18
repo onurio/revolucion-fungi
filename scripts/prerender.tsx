@@ -171,7 +171,7 @@ ${bodyContent}
         // Trigger Email extension fields
         to: 'info@revolucionfungifest.com',
         message: {
-          subject: 'Nuevo contacto del Festival - Revolución Fungi Fest',
+          subject: 'Nuevo mensaje de contacto - Revolución Fungi Fest',
           html: \`
             <h2>Nuevo contacto del Festival</h2>
             <p><strong>Nombre:</strong> \${nombres}</p>
