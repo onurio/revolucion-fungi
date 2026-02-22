@@ -240,6 +240,79 @@ const VisualActivitiesSection: React.FC = () => {
           ]
         },
         {
+          name: 'Ing. Andrés Farroñay',
+          subtitle: 'Ciencia para la Conservación',
+          images: [
+            '/activities/masterclass/arbio-01.jpg',
+            '/activities/masterclass/arbio-02.jpg',
+            '/activities/masterclass/arbio-03.jpg'
+          ]
+        },
+        {
+          name: 'Antrop. Felipe Soto',
+          subtitle: 'Antropología en hongos psilocibios',
+          images: [
+            '/activities/masterclass/felipe-soto-01.jpg',
+            '/activities/masterclass/felipe-soto-02.jpg',
+            '/activities/masterclass/felipe-soto-03.jpg'
+          ]
+        },
+        {
+          name: 'Ivan Pérez & Fer Walüng',
+          subtitle: 'Hongos Sagrados Silvestres',
+          images: [
+            '/activities/masterclass/hongos-sagrados-01.jpg',
+            '/activities/masterclass/hongos-sagrados-02.jpg',
+            '/activities/masterclass/hongos-sagrados-03.jpg',
+            '/activities/masterclass/hongos-sagrados-04.jpg'
+          ]
+        },
+        {
+          name: 'Antrop. Inti Clavijo',
+          subtitle: '¿Por qué no nos han enseñado nada de hongos?',
+          images: [
+            '/activities/masterclass/inti-clavijo-01.jpg',
+            '/activities/masterclass/inti-clavijo-02.jpg',
+            '/activities/masterclass/inti-clavijo-03.jpg'
+          ]
+        },
+        {
+          name: 'Antrop. Jhafet Magán',
+          subtitle: 'El Apu: Criador de hongos y humanos',
+          images: [
+            '/activities/masterclass/jhafet-magan-01.jpg',
+            '/activities/masterclass/jhafet-magan-02.jpg',
+            '/activities/masterclass/jhafet-magan-03.jpg'
+          ]
+        },
+        {
+          name: 'Ph.D. Julio Chía',
+          subtitle: 'Herramientas moleculares',
+          images: [
+            '/activities/masterclass/julio-chia-01.jpg',
+            '/activities/masterclass/julio-chia-02.jpg',
+            '/activities/masterclass/julio-chia-03.jpg'
+          ]
+        },
+        {
+          name: 'Ing. Ladislao Ruiz',
+          subtitle: 'Hongos comestibles de la amazonía',
+          images: [
+            '/activities/masterclass/ladislao-ruiz-01.jpg',
+            '/activities/masterclass/ladislao-ruiz-02.jpg',
+            '/activities/masterclass/ladislao-ruiz-03.jpg'
+          ]
+        },
+        {
+          name: 'Biol. Maria Rodrigo',
+          subtitle: 'Plantas que combaten Hongos',
+          images: [
+            '/activities/masterclass/maria-rodrigo-01.jpg',
+            '/activities/masterclass/maria-rodrigo-02.jpg',
+            '/activities/masterclass/maria-rodrigo-03.jpg'
+          ]
+        },
+        {
           name: 'Santiago Acosta',
           subtitle: 'Experto Internacional',
           images: [
