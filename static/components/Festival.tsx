@@ -314,7 +314,7 @@ const VisualActivitiesSection: React.FC = () => {
         },
         {
           name: 'Santiago Acosta',
-          subtitle: 'Experto Internacional',
+          subtitle: 'Micoterapia en Medicina Veterinaria',
           images: [
             '/activities/masterclass/santiago-acosta-01.jpg',
             '/activities/masterclass/santiago-acosta-02.jpg',
@@ -324,7 +324,7 @@ const VisualActivitiesSection: React.FC = () => {
         },
         {
           name: 'Alan Rockefeller',
-          subtitle: 'Experto Internacional',
+          subtitle: 'Inmersión en Micología',
           images: [
             '/activities/masterclass/alan-rockefeller-01.jpg',
             '/activities/masterclass/alan-rockefeller-02.jpg',
@@ -336,7 +336,7 @@ const VisualActivitiesSection: React.FC = () => {
         },
         {
           name: 'Santiago Jaramillo',
-          subtitle: 'Experto Internacional',
+          subtitle: 'Cultivo de Hongos Comestibles',
           images: [
             '/activities/masterclass/santiago-jaramillo-01.jpg',
             '/activities/masterclass/santiago-jaramillo-02.jpg',
@@ -346,7 +346,7 @@ const VisualActivitiesSection: React.FC = () => {
         },
         {
           name: 'Webinars',
-          subtitle: 'Charlas Virtuales',
+          subtitle: 'Producción con Residuos Agro-Industriales',
           images: [
             '/activities/masterclass/webinars-01.jpg',
             '/activities/masterclass/webinars-02.jpg',
