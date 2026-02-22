@@ -546,7 +546,7 @@ const VisualActivitiesSection: React.FC = () => {
                 activityCard.className = 'cursor-pointer hover:opacity-90 transition-opacity';
                 activityCard.innerHTML = \`
                   <div class="bg-white border-2 border-gray-200 rounded-lg overflow-hidden hover:border-orange-500 transition-colors">
-                    <img src="\${activity.images[0]}" alt="\${activity.name}" class="w-full h-64 object-cover" />
+                    <img src="\${activity.images[0]}" alt="\${activity.name}" class="w-full h-80 object-contain bg-gray-50" />
                     <div class="p-4">
                       <h4 class="font-bold text-gray-900 text-lg">\${activity.name}</h4>
                       <p class="text-gray-600 text-sm">\${activity.subtitle}</p>
