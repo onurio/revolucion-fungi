@@ -12,6 +12,21 @@ import countries from "../data/countries.json";
  * Azul: RGB(1, 135, 197) - #0187c5
  */
 
+interface Activity {
+  name: string;
+  subtitle: string;
+  images: string[];
+  showAllImages?: boolean;
+}
+
+interface Category {
+  id: string;
+  title: string;
+  image: string;
+  alt: string;
+  activities: Activity[];
+}
+
 const Navbar: React.FC = () => {
   return (
     <>
@@ -377,7 +392,18 @@ const VisualActivitiesSection: React.FC = () => {
       title: 'FERIA FUNGI',
       image: '/activities/categories/05.jpg',
       alt: 'Feria Fungi',
-      activities: []
+      activities: [
+        {
+          name: 'STANDS',
+          subtitle: 'Feria de Productos y Servicios',
+          images: [
+            '/activities/feria/stands-01.jpg',
+            '/activities/feria/stands-02.jpg',
+            '/activities/feria/stands-03.jpg'
+          ],
+          showAllImages: true
+        }
+      ]
     },
     {
       id: 'caminatas',
@@ -530,6 +556,13 @@ const VisualActivitiesSection: React.FC = () => {
           function openActivityModal(categoryId) {
             currentCategory = categoriesData.find(c => c.id === categoryId);
             if (!currentCategory) return;
+
+            // Special case: Feria Fungi with STANDS - go directly to carousel
+            if (categoryId === 'feria' && currentCategory.activities.length === 1 && currentCategory.activities[0].showAllImages) {
+              const standsActivity = currentCategory.activities[0];
+              openCarousel(standsActivity.images, standsActivity.name);
+              return;
+            }
 
             activityModalTitle.textContent = currentCategory.title;
 
