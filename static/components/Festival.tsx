@@ -161,19 +161,13 @@ const PartnersSection: React.FC = () => {
 
   const categories: Category[] = [
     {
-      title: 'ORGANIZA',
+      title: 'Organiza:',
       logos: [
         { src: '/partner_logos/organiza/revolucion-fungi.png', alt: 'Revolución Fungi' }
       ]
     },
     {
-      title: 'PRODUCE',
-      logos: [
-        { src: '/partner_logos/produce/quantico-producciones.png', alt: 'Quantico Producciones' }
-      ]
-    },
-    {
-      title: 'AUSPICIAN',
+      title: 'Auspicia:',
       logos: [
         { src: '/partner_logos/auspician/bioay.png', alt: 'BIOAY', height: '100px', maxWidth: '220px' },
         { src: '/partner_logos/auspician/camara-de-comercio-turismo-y-medio-ambiente-oxapampa-.png', alt: 'Cámara de Comercio Turismo y Medio Ambiente - Oxapampa' },
@@ -186,7 +180,7 @@ const PartnersSection: React.FC = () => {
       ]
     },
     {
-      title: 'COLABORAN',
+      title: 'Gracias a:',
       logos: [
         { src: '/partner_logos/colaboran/alan-rockefeller-mycena.png', alt: 'Alan Rockefeller - Mycena' },
         { src: '/partner_logos/colaboran/amadeo.png', alt: 'Amadeo' },
@@ -220,51 +214,27 @@ const PartnersSection: React.FC = () => {
         { src: '/partner_logos/colaboran/unsaac.png', alt: 'UNSAAC' },
         { src: '/partner_logos/colaboran/viviana-castaneda-leon.png', alt: 'Viviana Castañeda León' }
       ]
+    },
+    {
+      title: 'Produce:',
+      logos: [
+        { src: '/partner_logos/produce/quantico-producciones.png', alt: 'Quantico Producciones' }
+      ]
     }
   ];
 
   return (
     <section className="bg-white py-12">
       <div className="max-w-7xl mx-auto px-6">
-        {/* ORGANIZA and PRODUCE side by side */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 mb-16">
-          {categories.slice(0, 2).map((category) => (
-            <div key={category.title}>
-              <div className="mb-6">
-                <h3 className="text-center text-xl font-bold text-gray-900 mb-2 uppercase tracking-wide">
-                  {category.title}
-                </h3>
-                <div className="w-16 h-1 bg-orange-500 mx-auto rounded-full"></div>
-              </div>
-              <div className="flex justify-center items-center">
-                {category.logos.map((logo) => (
-                  <img
-                    key={logo.alt}
-                    src={logo.src}
-                    alt={logo.alt}
-                    style={{
-                      height: logo.height || '60px',
-                      maxWidth: logo.maxWidth || '140px',
-                      objectFit: 'contain',
-                      filter: 'none',
-                    }}
-                  />
-                ))}
-              </div>
-            </div>
-          ))}
-        </div>
-
-        {/* AUSPICIAN and COLABORAN full width */}
-        {categories.slice(2).map((category) => (
+        {categories.map((category) => (
           <div key={category.title} className="mb-16 last:mb-0">
             <div className="mb-6">
-              <h3 className="text-center text-xl font-bold text-gray-900 mb-2 uppercase tracking-wide">
+              <h3 className="text-xl font-bold text-gray-900 mb-2">
                 {category.title}
               </h3>
-              <div className="w-16 h-1 bg-orange-500 mx-auto rounded-full"></div>
+              <div className="w-16 h-1 bg-orange-500 rounded-full"></div>
             </div>
-            <div className="flex flex-wrap justify-center items-center gap-8">
+            <div className="flex flex-wrap items-center gap-8">
               {category.logos.map((logo) => (
                 <img
                   key={logo.alt}
