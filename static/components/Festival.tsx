@@ -147,33 +147,140 @@ const HeroSection: React.FC = () => {
 };
 
 const PartnersSection: React.FC = () => {
-  const logos: { src: string; alt: string; height?: string; maxWidth?: string }[] = [
-    { src: '/partner_logos/clean/revolucion-fungi.png', alt: 'Revolución Fungi' },
-    { src: '/partner_logos/clean/parque-yanachaga.jpg', alt: 'Parque Nacional Yanachaga-Chemillén SERNANP' },
-    { src: '/partner_logos/clean/municipalidad-oxapampa.svg', alt: 'Municipalidad de Oxapampa' },
-    { src: '/partner_logos/clean/bioay.png', alt: 'BIOAY', height: '100px', maxWidth: '220px' },
-    { src: '/partner_logos/clean/kowen-antami.png', alt: 'Consorcio Kowen Antami' },
-    { src: '/partner_logos/clean/cinema-oxa.png', alt: 'Cinema Oxa' },
+  interface Logo {
+    src: string;
+    alt: string;
+    height?: string;
+    maxWidth?: string;
+  }
+
+  interface Category {
+    title: string;
+    logos: Logo[];
+  }
+
+  const categories: Category[] = [
+    {
+      title: 'ORGANIZA',
+      logos: [
+        { src: '/partner_logos/organiza/revolucion-fungi.png', alt: 'Revolución Fungi' }
+      ]
+    },
+    {
+      title: 'PRODUCE',
+      logos: [
+        { src: '/partner_logos/produce/quantico-producciones.png', alt: 'Quantico Producciones' }
+      ]
+    },
+    {
+      title: 'AUSPICIAN',
+      logos: [
+        { src: '/partner_logos/auspician/bioay.png', alt: 'BIOAY', height: '100px', maxWidth: '220px' },
+        { src: '/partner_logos/auspician/camara-de-comercio-turismo-y-medio-ambiente-oxapampa-.png', alt: 'Cámara de Comercio Turismo y Medio Ambiente - Oxapampa' },
+        { src: '/partner_logos/auspician/charlie-house.png', alt: 'Charlie House' },
+        { src: '/partner_logos/auspician/el-trapiche-lodge-cabanas.png', alt: 'El Trapiche Lodge Cabañas' },
+        { src: '/partner_logos/auspician/fundo-hassinger.png', alt: 'Fundo Hassinger' },
+        { src: '/partner_logos/auspician/hassinger-ranch-oxapampa.png', alt: 'Hassinger Ranch Oxapampa' },
+        { src: '/partner_logos/auspician/movil-bus.png', alt: 'Movil Bus' },
+        { src: '/partner_logos/auspician/parque-nacional-yanachaga-chemillen-sernanp.png', alt: 'Parque Nacional Yanachaga-Chemillén SERNANP' }
+      ]
+    },
+    {
+      title: 'COLABORAN',
+      logos: [
+        { src: '/partner_logos/colaboran/alan-rockefeller-mycena.png', alt: 'Alan Rockefeller - Mycena' },
+        { src: '/partner_logos/colaboran/amadeo.png', alt: 'Amadeo' },
+        { src: '/partner_logos/colaboran/arbio.png', alt: 'Arbio' },
+        { src: '/partner_logos/colaboran/artesanias-charo.png', alt: 'Artesanías Charo' },
+        { src: '/partner_logos/colaboran/baertl-cerveceria-restaurante.png', alt: 'Baertl Cervecería & Restaurante' },
+        { src: '/partner_logos/colaboran/biodim.png', alt: 'BIODIM' },
+        { src: '/partner_logos/colaboran/ceare.png', alt: 'CEARE' },
+        { src: '/partner_logos/colaboran/cinema-oxa.png', alt: 'Cinema Oxa' },
+        { src: '/partner_logos/colaboran/colegio-medico-veterinario-del-peru.png', alt: 'Colegio Médico Veterinario del Perú' },
+        { src: '/partner_logos/colaboran/consorcio-kowen-antami.png', alt: 'Consorcio Kowen Antami' },
+        { src: '/partner_logos/colaboran/curandale.png', alt: 'Curandale' },
+        { src: '/partner_logos/colaboran/el-parche-de-ale.png', alt: 'El Parche de Ale' },
+        { src: '/partner_logos/colaboran/fundacion-fungi.png', alt: 'Fundación Fungi' },
+        { src: '/partner_logos/colaboran/gnd.png', alt: 'GND' },
+        { src: '/partner_logos/colaboran/grounded.png', alt: 'Grounded' },
+        { src: '/partner_logos/colaboran/la-caravana-de-la-lectura-celeste-pena.png', alt: 'La Caravana de la Lectura' },
+        { src: '/partner_logos/colaboran/laboratorio-micologia-y-biotecnologia-unalm.png', alt: 'Laboratorio Micología y Biotecnología - UNALM' },
+        { src: '/partner_logos/colaboran/myco-tuc.png', alt: 'Myco-Tuc' },
+        { src: '/partner_logos/colaboran/pompeya-store.png', alt: 'Pompeya Store' },
+        { src: '/partner_logos/colaboran/salvatore-liberti.png', alt: 'Salvatore Liberti' },
+        { src: '/partner_logos/colaboran/sante.png', alt: 'Sante' },
+        { src: '/partner_logos/colaboran/sidra-calango.png', alt: 'Sidra Calango' },
+        { src: '/partner_logos/colaboran/sidra-micelial.png', alt: 'Sidra Micelial' },
+        { src: '/partner_logos/colaboran/tangara-music.png', alt: 'Tangara Music' },
+        { src: '/partner_logos/colaboran/tayta-kombucha.png', alt: 'Tayta Kombucha' },
+        { src: '/partner_logos/colaboran/tierra-de-bosques.png', alt: 'Tierra de Bosques' },
+        { src: '/partner_logos/colaboran/unalm.png', alt: 'UNALM' },
+        { src: '/partner_logos/colaboran/unfv-universidad-nacional-federico-villarreal.png', alt: 'UNFV' },
+        { src: '/partner_logos/colaboran/unprg.png', alt: 'UNPRG' },
+        { src: '/partner_logos/colaboran/unsaac.png', alt: 'UNSAAC' },
+        { src: '/partner_logos/colaboran/viviana-castaneda-leon.png', alt: 'Viviana Castañeda León' }
+      ]
+    }
   ];
 
   return (
-    <section className="bg-white py-8">
-      <div className="max-w-6xl mx-auto px-6">
-        <div className="flex flex-wrap justify-center items-center gap-8">
-          {logos.map((logo) => (
-            <img
-              key={logo.alt}
-              src={logo.src}
-              alt={logo.alt}
-              style={{
-                height: logo.height || '60px',
-                maxWidth: logo.maxWidth || '140px',
-                objectFit: 'contain',
-                filter: 'none',
-              }}
-            />
+    <section className="bg-white py-12">
+      <div className="max-w-7xl mx-auto px-6">
+        {/* ORGANIZA and PRODUCE side by side */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 mb-16">
+          {categories.slice(0, 2).map((category) => (
+            <div key={category.title}>
+              <div className="mb-6">
+                <h3 className="text-center text-xl font-bold text-gray-900 mb-2 uppercase tracking-wide">
+                  {category.title}
+                </h3>
+                <div className="w-16 h-1 bg-orange-500 mx-auto rounded-full"></div>
+              </div>
+              <div className="flex justify-center items-center">
+                {category.logos.map((logo) => (
+                  <img
+                    key={logo.alt}
+                    src={logo.src}
+                    alt={logo.alt}
+                    style={{
+                      height: logo.height || '60px',
+                      maxWidth: logo.maxWidth || '140px',
+                      objectFit: 'contain',
+                      filter: 'none',
+                    }}
+                  />
+                ))}
+              </div>
+            </div>
           ))}
         </div>
+
+        {/* AUSPICIAN and COLABORAN full width */}
+        {categories.slice(2).map((category) => (
+          <div key={category.title} className="mb-16 last:mb-0">
+            <div className="mb-6">
+              <h3 className="text-center text-xl font-bold text-gray-900 mb-2 uppercase tracking-wide">
+                {category.title}
+              </h3>
+              <div className="w-16 h-1 bg-orange-500 mx-auto rounded-full"></div>
+            </div>
+            <div className="flex flex-wrap justify-center items-center gap-8">
+              {category.logos.map((logo) => (
+                <img
+                  key={logo.alt}
+                  src={logo.src}
+                  alt={logo.alt}
+                  style={{
+                    height: logo.height || '60px',
+                    maxWidth: logo.maxWidth || '140px',
+                    objectFit: 'contain',
+                    filter: 'none',
+                  }}
+                />
+              ))}
+            </div>
+          </div>
+        ))}
       </div>
     </section>
   );

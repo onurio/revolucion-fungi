@@ -51,18 +51,28 @@ async function main() {
       console.log('   ✓ Copied: og-image.jpg');
     }
 
-    // Copy partner_logos/clean folder
-    const partnerLogosDir = path.join(publicDir, 'partner_logos', 'clean');
-    if (fs.existsSync(partnerLogosDir)) {
-      const buildPartnerDir = path.join(buildClientDir, 'partner_logos', 'clean');
-      if (!fs.existsSync(buildPartnerDir)) {
-        fs.mkdirSync(buildPartnerDir, { recursive: true });
-      }
-      const logoFiles = fs.readdirSync(partnerLogosDir);
-      logoFiles.forEach(file => {
-        fs.copyFileSync(path.join(partnerLogosDir, file), path.join(buildPartnerDir, file));
+    // Copy partner_logos folders (clean + categorized)
+    const partnerLogosBaseDir = path.join(publicDir, 'partner_logos');
+    if (fs.existsSync(partnerLogosBaseDir)) {
+      const categories = ['clean', 'organiza', 'auspician', 'colaboran', 'produce'];
+      let totalLogos = 0;
+
+      categories.forEach(category => {
+        const categoryDir = path.join(partnerLogosBaseDir, category);
+        if (fs.existsSync(categoryDir)) {
+          const buildCategoryDir = path.join(buildClientDir, 'partner_logos', category);
+          if (!fs.existsSync(buildCategoryDir)) {
+            fs.mkdirSync(buildCategoryDir, { recursive: true });
+          }
+          const logoFiles = fs.readdirSync(categoryDir);
+          logoFiles.forEach(file => {
+            fs.copyFileSync(path.join(categoryDir, file), path.join(buildCategoryDir, file));
+          });
+          totalLogos += logoFiles.length;
+        }
       });
-      console.log(`   ✓ Copied: partner_logos/clean/ (${logoFiles.length} files)`);
+
+      console.log(`   ✓ Copied: partner_logos/ (${totalLogos} files)`);
     }
 
     // Copy festival-poster.jpg if it exists
